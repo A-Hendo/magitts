@@ -4,8 +4,8 @@ import { gitRun } from './gitRawRunner';
 
 export default class GitUtils {
 
-  public static setConfigVariable(repository: MagitRepository, key: string, val: string): Promise<IExecutionResult<string>> {
-    let args = ['config', '--local', key, val];
-    return gitRun(repository.gitRepository, args);
-  }
+	public static setConfigVariable(repository: MagitRepository, key: string, val: string): Promise<IExecutionResult<string>> {
+		let args = ['config', '--local', key, val];
+		return gitRun(repository.gitRepository, args);
+	}
 }

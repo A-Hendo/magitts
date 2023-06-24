@@ -37,7 +37,7 @@ named `win-git-path` to override (#243) (@rhoeberg)
 - Fixes rebase error message offset and makes error header visitable
 
 Some git error messages included a single carriage return making a the
-visting "click" logic off by one. This is now fixed by pruning these 
+visting "click" logic off by one. This is now fixed by pruning these
 characters. The error header is now also visitable by pressing enter.
 
 ## [0.6.31] - 2022-07-30
@@ -186,7 +186,7 @@ add this to your `settings.json`:
 - Fixes issue where stash list was showing 1 entry even when there are none.
 
 ## [0.4.15] - 2020-10-11
-- Adds rebase switch for "Pull" 
+- Adds rebase switch for "Pull"
 - UI Bugfixes
 
 ## [0.4.11] - 2020-10-01
@@ -323,7 +323,7 @@ Courtesy of @angusiguess (Angus Fletcher):
 ## [0.1.2] - 2020-03-23
 - Interactive rebasing
 - **Changed default top-level keybindings to avoid hijacking CUT shortcut on Linux and Windows**
-  
+
   New defaults are:
 
   ```

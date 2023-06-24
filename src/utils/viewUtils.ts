@@ -1,129 +1,129 @@
-import { MagitRepository } from '../models/magitRepository';
-import { View } from '../views/general/view';
-import { Selection, Position, Uri, workspace, window, TextDocumentShowOptions, ViewColumn } from 'vscode';
-import { Ref, RefType } from '../typings/git';
-import { Token } from '../views/general/semanticTextView';
+import { Position, Selection, TextDocumentShowOptions, Uri, ViewColumn, window, workspace } from 'vscode';
 import { SemanticTokenTypes } from '../common/constants';
-import GitTextUtils from './gitTextUtils';
-import { DocumentView } from '../views/general/documentView';
 import { magitConfig, views } from '../extension';
+import { MagitRepository } from '../models/magitRepository';
+import { Ref, RefType } from '../typings/git';
+import { DocumentView } from '../views/general/documentView';
+import { Token } from '../views/general/semanticTextView';
+import { View } from '../views/general/view';
+import GitTextUtils from './gitTextUtils';
 
 export default class ViewUtils {
 
-  public static createOrUpdateView(repository: MagitRepository, uri: Uri, viewFactory: () => DocumentView) {
-    const existingView = views.get(uri.toString());
+	public static createOrUpdateView(repository: MagitRepository, uri: Uri, viewFactory: () => DocumentView) {
+		const existingView = views.get(uri.toString());
 
-    if (existingView) {
-      existingView.update(repository);
-      return existingView;
-    }
-    return viewFactory();
-  }
+		if (existingView) {
+			existingView.update(repository);
+			return existingView;
+		}
+		return viewFactory();
+	}
 
-  public static async showView(uri: Uri, view: DocumentView, textDocumentShowOptions: TextDocumentShowOptions = { preview: false, preserveFocus: false }) {
-    views.set(uri.toString(), view);
-    let doc = await workspace.openTextDocument(uri);
-    return window.showTextDocument(doc, { viewColumn: ViewUtils.showDocumentColumn(), ...textDocumentShowOptions });
-  }
+	public static async showView(uri: Uri, view: DocumentView, textDocumentShowOptions: TextDocumentShowOptions = { preview: false, preserveFocus: false }) {
+		views.set(uri.toString(), view);
+		let doc = await workspace.openTextDocument(uri);
+		return window.showTextDocument(doc, { viewColumn: ViewUtils.showDocumentColumn(), ...textDocumentShowOptions });
+	}
 
-  public static showDocumentColumn(): ViewColumn {
-    const activeColumn = window.activeTextEditor?.viewColumn;
+	public static showDocumentColumn(): ViewColumn {
+		const activeColumn = window.activeTextEditor?.viewColumn;
 
-    if (magitConfig.displayBufferSameColumn) {
-      return activeColumn ?? ViewColumn.Active;
-    }
+		if (magitConfig.displayBufferSameColumn) {
+			return activeColumn ?? ViewColumn.Active;
+		}
 
-    if ((activeColumn ?? 0) > ViewColumn.One) {
-      return ViewColumn.One;
-    }
-    return ViewColumn.Two;
-  }
+		if ((activeColumn ?? 0) > ViewColumn.One) {
+			return ViewColumn.One;
+		}
+		return ViewColumn.Two;
+	}
 
-  public static async applyActionForSelection(repository: MagitRepository, currentView: View, selection: Selection, multiSelectableViewTypes: any[], action: Function): Promise<any> {
+	public static async applyActionForSelection(repository: MagitRepository, currentView: View, selection: Selection, multiSelectableViewTypes: any[], action: Function): Promise<any> {
 
-    if (!selection.isSingleLine) {
+		if (!selection.isSingleLine) {
 
-      let clickedViews = ViewUtils.multilineClick(currentView, selection, multiSelectableViewTypes);
+			let clickedViews = ViewUtils.multilineClick(currentView, selection, multiSelectableViewTypes);
 
-      if (clickedViews.length > 0) {
-        let actionResults = [];
-        for (const v of clickedViews) {
-          actionResults.push(
-            await action(repository, selection, v)
-          );
-        }
-        return actionResults;
-      }
-    }
+			if (clickedViews.length > 0) {
+				let actionResults = [];
+				for (const v of clickedViews) {
+					actionResults.push(
+						await action(repository, selection, v)
+					);
+				}
+				return actionResults;
+			}
+		}
 
-    const selectedView = currentView.click(selection.active);
-    return action(repository, selection, selectedView);
-  }
+		const selectedView = currentView.click(selection.active);
+		return action(repository, selection, selectedView);
+	}
 
-  private static multilineClick(currentView: View, selection: Selection, applicableViewTypes: any[]): View[] {
+	private static multilineClick(currentView: View, selection: Selection, applicableViewTypes: any[]): View[] {
 
-    let selectedViews: View[] = [];
-    let type: any = null;
+		let selectedViews: View[] = [];
+		let type: any = null;
 
-    for (let line = selection.start.line; line <= selection.end.line; line++) {
-      let clicked = currentView.click(new Position(line, 0));
+		for (let line = selection.start.line; line <= selection.end.line; line++) {
+			let clicked = currentView.click(new Position(line, 0));
 
-      if (clicked && applicableViewTypes.find(viewType => clicked instanceof viewType)) {
-        if (!type) {
-          type = clicked.constructor;
-        }
-        if (type === clicked.constructor) {
-          selectedViews.push(clicked);
-        }
-      }
-    }
+			if (clicked && applicableViewTypes.find(viewType => clicked instanceof viewType)) {
+				if (!type) {
+					type = clicked.constructor;
+				}
+				if (type === clicked.constructor) {
+					selectedViews.push(clicked);
+				}
+			}
+		}
 
-    return selectedViews;
-  }
+		return selectedViews;
+	}
 
-  public static generateRefTokensLine(commitHash: string, refs?: Ref[]): (string | Token)[] {
+	public static generateRefTokensLine(commitHash: string, refs?: Ref[]): (string | Token)[] {
 
-    const matchingRefs = (refs ?? [])
-      .filter(ref => ref.commit === commitHash)
-      .sort(ref => ref.type.valueOf());
+		const matchingRefs = (refs ?? [])
+			.filter(ref => ref.commit === commitHash)
+			.sort(ref => ref.type.valueOf());
 
-    let hasMatchingRemoteBranch: { [name: string]: boolean } = {};
+		let hasMatchingRemoteBranch: { [name: string]: boolean } = {};
 
-    let refsContent: (string | Token)[] = [];
-    matchingRefs.forEach(ref => {
+		let refsContent: (string | Token)[] = [];
+		matchingRefs.forEach(ref => {
 
-      if (!ref.name) {
-        return;
-      }
+			if (!ref.name) {
+				return;
+			}
 
-      if (ref.type === RefType.RemoteHead) {
+			if (ref.type === RefType.RemoteHead) {
 
-        let [remotePart, namePart] = GitTextUtils.remoteBranchFullNameToSegments(ref.name);
+				let [remotePart, namePart] = GitTextUtils.remoteBranchFullNameToSegments(ref.name);
 
-        let m = matchingRefs.find(other => other.name === namePart && other.type === RefType.Head);
-        if (m && m.name) {
-          hasMatchingRemoteBranch[m.name!] = true;
-          refsContent.push(new Token(remotePart + '/', SemanticTokenTypes.RemoteRefName), new Token(m.name ?? '', SemanticTokenTypes.RefName));
-          refsContent.push(' ');
-          return;
-        }
-      }
-      if (hasMatchingRemoteBranch[ref.name]) {
-        return;
-      }
+				let m = matchingRefs.find(other => other.name === namePart && other.type === RefType.Head);
+				if (m && m.name) {
+					hasMatchingRemoteBranch[m.name!] = true;
+					refsContent.push(new Token(remotePart + '/', SemanticTokenTypes.RemoteRefName), new Token(m.name ?? '', SemanticTokenTypes.RefName));
+					refsContent.push(' ');
+					return;
+				}
+			}
+			if (hasMatchingRemoteBranch[ref.name]) {
+				return;
+			}
 
-      let refTokenType = SemanticTokenTypes.RefName;
+			let refTokenType = SemanticTokenTypes.RefName;
 
-      if (ref.remote) {
-        refTokenType = SemanticTokenTypes.RemoteRefName;
-      } else if (ref.type === RefType.Tag) {
-        refTokenType = SemanticTokenTypes.TagName;
-      }
+			if (ref.remote) {
+				refTokenType = SemanticTokenTypes.RemoteRefName;
+			} else if (ref.type === RefType.Tag) {
+				refTokenType = SemanticTokenTypes.TagName;
+			}
 
-      refsContent.push(new Token(ref.name, refTokenType));
-      refsContent.push(' ');
-    });
+			refsContent.push(new Token(ref.name, refTokenType));
+			refsContent.push(' ');
+		});
 
-    return refsContent;
-  }
+		return refsContent;
+	}
 }

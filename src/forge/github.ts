@@ -1,45 +1,45 @@
-import { PullRequest } from './model/pullRequest';
 import * as vscode from 'vscode';
 import { ForgeState } from './model/forgeState';
-import request from './request';
 import { Issue } from './model/issue';
+import { PullRequest } from './model/pullRequest';
+import request from './request';
 
 const GITHUB_AUTH_PROVIDER_ID = 'github';
 const SCOPES = ['repo'];
 
 export async function getGithubForgeState(remoteUrl: string): Promise<ForgeState> {
 
-  let cleaned = remoteUrl
-    .replace(/.*github.com(\/|:)/, '')
-    .replace('.git', '')
-    .split('/').filter(Boolean);
+	let cleaned = remoteUrl
+		.replace(/.*github.com(\/|:)/, '')
+		.replace('.git', '')
+		.split('/').filter(Boolean);
 
-  const owner = cleaned[0];
-  const repo = cleaned[1];
+	const owner = cleaned[0];
+	const repo = cleaned[1];
 
-  let accessToken = await authenticate();
+	let accessToken = await authenticate();
 
-  let [pullRequests, issues] = await getPullRequestsAndIssues(accessToken, owner, repo);
+	let [pullRequests, issues] = await getPullRequestsAndIssues(accessToken, owner, repo);
 
-  return {
-    forgeRemote: remoteUrl.toString(),
-    pullRequests,
-    issues
-  };
+	return {
+		forgeRemote: remoteUrl.toString(),
+		pullRequests,
+		issues
+	};
 }
 
 async function authenticate(): Promise<string> {
 
-  const session = await vscode.authentication.getSession(GITHUB_AUTH_PROVIDER_ID, SCOPES, { createIfNone: true });
-  return session.accessToken;
+	const session = await vscode.authentication.getSession(GITHUB_AUTH_PROVIDER_ID, SCOPES, { createIfNone: true });
+	return session.accessToken;
 }
 
 async function getPullRequestsAndIssues(accessToken: string, owner: string, repo: string): Promise<[PullRequest[], Issue[]]> {
 
-  let res = await queryGithub(accessToken,
-    {
-      query:
-        `query GetOpenPullRequests($owner: String!, $repo: String!) {
+	let res = await queryGithub(accessToken,
+		{
+			query:
+				`query GetOpenPullRequests($owner: String!, $repo: String!) {
             repository(owner: $owner, name: $repo) {
               pullRequests(last:20, states: OPEN) {
                 edges { node {
@@ -104,88 +104,88 @@ async function getPullRequestsAndIssues(accessToken: string, owner: string, repo
                   }
               }}}
           }}`,
-      variables: {
-        owner,
-        repo
-      }
-    }
-  );
+			variables: {
+				owner,
+				repo
+			}
+		}
+	);
 
-  if (res.errors) {
-    throw new Error(res.errors);
-  }
+	if (res.errors) {
+		throw new Error(res.errors);
+	}
 
-  // assignees(last: 10) {
-  //   edges { node {
-  //     name
-  //     login
-  //     email
-  //   }}
-  // }
+	// assignees(last: 10) {
+	//   edges { node {
+	//     name
+	//     login
+	//     email
+	//   }}
+	// }
 
-  return [
+	return [
 
-    res.data.repository.pullRequests.edges.map(({ node }: any) => ({
-      number: node.number,
-      title: node.title,
-      remoteRef: `pull/${node.number}/head`,
-      author: node.author.login,
-      createdAt: node.createdAt,
-      bodyText: node.bodyText,
-      comments: node.comments.edges.map(mapComment),
-      assignees: [],
-      // assignees: node.assignees.edges.map(mapUser),
-      labels: node.labels.edges.map(mapLabel),
-      commits: node.commits.edges.map(mapCommit)
-    })).reverse(),
+		res.data.repository.pullRequests.edges.map(({ node }: any) => ({
+			number: node.number,
+			title: node.title,
+			remoteRef: `pull/${node.number}/head`,
+			author: node.author.login,
+			createdAt: node.createdAt,
+			bodyText: node.bodyText,
+			comments: node.comments.edges.map(mapComment),
+			assignees: [],
+			// assignees: node.assignees.edges.map(mapUser),
+			labels: node.labels.edges.map(mapLabel),
+			commits: node.commits.edges.map(mapCommit)
+		})).reverse(),
 
-    res.data.repository.issues.edges.map(({ node }: any) => ({
-      number: node.number,
-      title: node.title,
-      author: node.author.login,
-      createdAt: node.createdAt,
-      bodyText: node.bodyText,
-      comments: node.comments.edges.map(mapComment),
-      assignees: [],
-      // assignees: node.assignees.edges.map(mapUser),
-      labels: node.labels.edges.map(mapLabel)
-    })).reverse()
-  ];
+		res.data.repository.issues.edges.map(({ node }: any) => ({
+			number: node.number,
+			title: node.title,
+			author: node.author.login,
+			createdAt: node.createdAt,
+			bodyText: node.bodyText,
+			comments: node.comments.edges.map(mapComment),
+			assignees: [],
+			// assignees: node.assignees.edges.map(mapUser),
+			labels: node.labels.edges.map(mapLabel)
+		})).reverse()
+	];
 }
 
 const mapComment = ({ node }: any) => ({
-  author: node.author.login,
-  createdAt: node.createdAt,
-  bodyText: node.bodyText
+	author: node.author.login,
+	createdAt: node.createdAt,
+	bodyText: node.bodyText
 });
 
 const mapUser = ({ node }: any) => ({
-  displayName: node.name,
-  username: node.login,
-  email: node.email
+	displayName: node.name,
+	username: node.login,
+	email: node.email
 });
 
 const mapLabel = ({ node }: any) => ({
-  name: node.name,
-  color: node.color
+	name: node.name,
+	color: node.color
 });
 
 const mapCommit = ({ node: { commit } }: any) => ({
-  hash: commit.oid,
-  message: commit.message,
-  parents: commit.parents.edges.map((node: any) => node.oid),
-  authorDate: commit.authoredDate,
-  authorName: commit.author.name,
-  authorEmail: commit.author.email,
-  commitDate: commit.committedDate
+	hash: commit.oid,
+	message: commit.message,
+	parents: commit.parents.edges.map((node: any) => node.oid),
+	authorDate: commit.authoredDate,
+	authorName: commit.author.name,
+	authorEmail: commit.author.email,
+	commitDate: commit.committedDate
 });
 
 async function queryGithub(accessToken: string, ql: object) {
-  let res = await request
-    .post('https://api.github.com/graphql')
-    .set('Authorization', `Bearer ${accessToken}`)
-    .set('User-Agent', 'edamagit')
-    .send(JSON.stringify(ql));
+	let res = await request
+		.post('https://api.github.com/graphql')
+		.set('Authorization', `Bearer ${accessToken}`)
+		.set('User-Agent', 'edamagit')
+		.send(JSON.stringify(ql));
 
-  return JSON.parse(res.data);
+	return JSON.parse(res.data);
 }

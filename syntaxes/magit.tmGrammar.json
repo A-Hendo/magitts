@@ -1,82 +1,82 @@
 {
-  "scopeName": "source.magit",
-  "patterns": [
-    {
-      "include": "#expression"
-    },
-    {
-      "include": "#diff"
-    }
-  ],
-  "repository": {
-    "expression": {
-      "patterns": [
-        {
-          "include": "#sectionHeader"
-        },
-        {
-          "include": "#highlight"
-        },
-        {
-          "include": "#highlight2"
-        },
-        {
-          "include": "#highlight3"
-        },
-        {
-          "include": "#fixup"
-        },
-        {
-          "include": "#modified"
-        },
-        {
-          "include": "#entity"
-        },
-        {
-          "include": "#helpKey"
-        }
-      ]
-    },
-    "sectionHeader": {
-      "match": "^(Untracked files|((Unstaged|Staged) changes)|Stashes|Recent commits|Unmerged into|Unpushed to|Unpulled from|HEAD|Branches|Remote|Tags|Pull Requests|Issues|GitError!|(Merging .*(?= \\())|(Rebasing .* onto .*$)|Cherry Picking|Reverting|Stash@{\\d+}|(Commits in .*$))",
-      "name": "strong keyword.operator.new.section.header.magit magit.header"
-    },
-    "highlight": {
-      "match": "^(join|pick)",
-      "name": "string.highlight"
-    },
-    "highlight2": {
-      "match": "^(done|gone)",
-      "name": "support.type.property-name.json"
-    },
-    "highlight3": {
-      "match": "^(onto)",
-      "name": "string.quoted.double.json"
-    },
-    "fixup": {
-      "match": "fixup!",
-      "name": "invalid.deprecated"
-    },
-    "entity": {
-      "match": "(^stash@{\\d+}|((^)([0-9a-f]{7}) ))|(^#\\d+)",
-      "name": "variable.object.property magit.entity"
-    },
-    "modified": {
-      "match": "^(modified|new file|deleted|renamed|copied|unmerged)   .*$",
-      "name": "strong magit.subheader"
-    },
-    "diff": {
-      "begin": "(?=^@@)",
-      "end": "(?=^(modified|new file|deleted|renamed|copied|unmerged))|(?=$^)",
-      "patterns": [
-        {
-          "include": "source.diff"
-        }
-      ]
-    },
-    "helpKey": {
-      "match": "  ([^\\s]|!|\\$|\\%|TAB|RET|\\_|-|(shift(\\+|-)[^a-zA-Z])) ",
-      "name": "strong keyword.operator.new"
-    }
-  }
+	"scopeName": "source.magit",
+	"patterns": [
+		{
+			"include": "#expression"
+		},
+		{
+			"include": "#diff"
+		}
+	],
+	"repository": {
+		"expression": {
+			"patterns": [
+				{
+					"include": "#sectionHeader"
+				},
+				{
+					"include": "#highlight"
+				},
+				{
+					"include": "#highlight2"
+				},
+				{
+					"include": "#highlight3"
+				},
+				{
+					"include": "#fixup"
+				},
+				{
+					"include": "#modified"
+				},
+				{
+					"include": "#entity"
+				},
+				{
+					"include": "#helpKey"
+				}
+			]
+		},
+		"sectionHeader": {
+			"match": "^(Untracked files|((Unstaged|Staged) changes)|Stashes|Recent commits|Unmerged into|Unpushed to|Unpulled from|HEAD|Branches|Remote|Tags|Pull Requests|Issues|GitError!|(Merging .*(?= \\())|(Rebasing .* onto .*$)|Cherry Picking|Reverting|Stash@{\\d+}|(Commits in .*$))",
+			"name": "strong keyword.operator.new.section.header.magit magit.header"
+		},
+		"highlight": {
+			"match": "^(join|pick)",
+			"name": "string.highlight"
+		},
+		"highlight2": {
+			"match": "^(done|gone)",
+			"name": "support.type.property-name.json"
+		},
+		"highlight3": {
+			"match": "^(onto)",
+			"name": "string.quoted.double.json"
+		},
+		"fixup": {
+			"match": "fixup!",
+			"name": "invalid.deprecated"
+		},
+		"entity": {
+			"match": "(^stash@{\\d+}|((^)([0-9a-f]{7}) ))|(^#\\d+)",
+			"name": "variable.object.property magit.entity"
+		},
+		"modified": {
+			"match": "^(modified|new file|deleted|renamed|copied|unmerged)   .*$",
+			"name": "strong magit.subheader"
+		},
+		"diff": {
+			"begin": "(?=^@@)",
+			"end": "(?=^(modified|new file|deleted|renamed|copied|unmerged))|(?=$^)",
+			"patterns": [
+				{
+					"include": "source.diff"
+				}
+			]
+		},
+		"helpKey": {
+			"match": "  ([^\\s]|!|\\$|\\%|TAB|RET|\\_|-|(shift(\\+|-)[^a-zA-Z])) ",
+			"name": "strong keyword.operator.new"
+		}
+	}
 }

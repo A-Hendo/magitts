@@ -1,70 +1,70 @@
-import { DocumentView } from './general/documentView';
 import { Uri } from 'vscode';
-import * as Constants from '../common/constants';
-import { TextView } from './general/textView';
-import { MagitRepository } from '../models/magitRepository';
 import * as meta from '../../package.json';
+import * as Constants from '../common/constants';
+import { MagitRepository } from '../models/magitRepository';
+import { DocumentView } from './general/documentView';
+import { TextView } from './general/textView';
 
 export class HelpView extends DocumentView {
 
-  static UriPath: string = 'help.magit';
-  isHighlightable = false;
-  needsUpdate = false;
+	static UriPath: string = 'help.magit';
+	isHighlightable = false;
+	needsUpdate = false;
 
-  constructor(uri: Uri, userKeyBindings: any) {
-    super(uri);
+	constructor (uri: Uri, userKeyBindings: any) {
+		super(uri);
 
-    let binds = HelpView.generateBindings(userKeyBindings);
-    let diffTextView = new TextView(HelpView.createHelpText(binds));
-    diffTextView.isHighlightable = false;
-    this.addSubview(diffTextView);
-  }
+		let binds = HelpView.generateBindings(userKeyBindings);
+		let diffTextView = new TextView(HelpView.createHelpText(binds));
+		diffTextView.isHighlightable = false;
+		this.addSubview(diffTextView);
+	}
 
-  public update(state: MagitRepository): void { }
+	public update(state: MagitRepository): void { }
 
-  static encodeLocation(repository: MagitRepository): Uri {
-    return Uri.parse(`${Constants.MagitUriScheme}:${HelpView.UriPath}?${repository.uri.path}#help`);
-  }
+	static encodeLocation(repository: MagitRepository): Uri {
+		return Uri.parse(`${Constants.MagitUriScheme}:${HelpView.UriPath}?${repository.uri.path}#help`);
+	}
 
-  private static joinTexts(spacing: number, texts: string[]) {
-    let joinedText = texts.length > 0 ? texts[0] : '';
-    for (let i = 1; i < texts.length; i++) {
-      const prev = texts[i - 1];
-      const current = texts[i];
+	private static joinTexts(spacing: number, texts: string[]) {
+		let joinedText = texts.length > 0 ? texts[0] : '';
+		for (let i = 1; i < texts.length; i++) {
+			const prev = texts[i - 1];
+			const current = texts[i];
 
-      const remainingSpacing = prev.length <= spacing ? spacing - prev.length : 0;
-      joinedText += ' '.repeat(remainingSpacing) + current;
-    }
-    return joinedText;
-  }
+			const remainingSpacing = prev.length <= spacing ? spacing - prev.length : 0;
+			joinedText += ' '.repeat(remainingSpacing) + current;
+		}
+		return joinedText;
+	}
 
-  private static keybindingToDisplayKey(bind: string): string {
-    if (/shift(\+|-)[a-zA-Z]/g.test(bind)) {
-      return bind.substring(6).toLocaleUpperCase();
-    } else if (bind === 'enter') {
-      return 'RET';
-    } else if (bind === 'tab') {
-      return 'TAB';
-    }
-    return bind;
-  }
+	private static keybindingToDisplayKey(bind: string): string {
+		if (/shift(\+|-)[a-zA-Z]/g.test(bind)) {
+			return bind.substring(6).toLocaleUpperCase();
+		} else if (bind === 'enter') {
+			return 'RET';
+		} else if (bind === 'tab') {
+			return 'TAB';
+		}
+		return bind;
+	}
 
-  private static generateBindings(userKeyBindings: any) {
-    let binds = meta.contributes.keybindings.reduce((prev, bind) => ({
-      ...prev,
-      [bind.command]: HelpView.keybindingToDisplayKey(bind.key)
-    }), {});
+	private static generateBindings(userKeyBindings: any) {
+		let binds = meta.contributes.keybindings.reduce((prev, bind) => ({
+			...prev,
+			[bind.command]: HelpView.keybindingToDisplayKey(bind.key)
+		}), {});
 
-    binds = userKeyBindings.reduce((prev: any, bind: any) => ({
-      ...prev,
-      [bind.command]: HelpView.keybindingToDisplayKey(bind.key)
-    }), binds);
+		binds = userKeyBindings.reduce((prev: any, bind: any) => ({
+			...prev,
+			[bind.command]: HelpView.keybindingToDisplayKey(bind.key)
+		}), binds);
 
-    return binds;
-  }
+		return binds;
+	}
 
-  private static createHelpText(c: any) {
-    return `Popup and dwim commands
+	private static createHelpText(c: any) {
+		return `Popup and dwim commands
   ${HelpView.joinTexts(19, [`${c['magit.cherry-picking']} Cherry-pick`, `${c['magit.branching']} Branch`, `${c['magit.commit']} Commit`])}
   ${HelpView.joinTexts(19, [`${c['magit.diffing']} Diff`, `${c['magit.fetching']} Fetch`, `${c['magit.pulling']} Pull`])}
   ${HelpView.joinTexts(19, [`${c['magit.ignoring']} Ignore`, `${c['magit.logging']} Log`, `${c['magit.merging']} Merge`])}
@@ -87,5 +87,5 @@ Essential commands
 
   ${HelpView.joinTexts(9, [c['magit.move-next-entity'], 'Move cursor to next entity'])}
   ${HelpView.joinTexts(9, [c['magit.move-previous-entity'], 'Move cursor to previous entity'])}`;
-  }
+	}
 }

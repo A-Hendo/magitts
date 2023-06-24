@@ -26,7 +26,7 @@ export async function rebasing(repository: MagitRepository) {
 			{ key: '-p', name: '--rebase-merges', description: 'Rebase merges' },
 			{ key: '-c', name: '--committer-date-is-author-date', description: 'Lie about committer date' },
 			{ key: '-a', name: '--autosquash', description: 'Autosquash' },
-			{ key: '-A', name: '--autostash', description: 'Autostash' },
+			{ key: '-A', name: '--autostash', description: 'Autostash', activated: true },
 			{ key: '-i', name: '--interactive', description: 'Interactive' },
 			{ key: '-h', name: '--no-verify', description: 'Disable hooks' },
 		];

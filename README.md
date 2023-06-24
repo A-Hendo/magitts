@@ -101,16 +101,16 @@ remove the default edamagit bindings and the collisions with the Vim extension.
 
 <details>
   <summary>Bindings - keybindings.json</summary>
-  
+
   ```json
     {
        "key": "g g",
        "command": "cursorTop",
-       "when": "editorTextFocus && editorLangId == 'magit' && vim.mode =~ /^(?!SearchInProgressMode|CommandlineInProgress).*$/" 
+       "when": "editorTextFocus && editorLangId == 'magit' && vim.mode =~ /^(?!SearchInProgressMode|CommandlineInProgress).*$/"
     },
     { "key": "g r",
        "command": "magit.refresh",
-       "when": "editorTextFocus && editorLangId == 'magit' && vim.mode =~ /^(?!SearchInProgressMode|CommandlineInProgress).*$/" 
+       "when": "editorTextFocus && editorLangId == 'magit' && vim.mode =~ /^(?!SearchInProgressMode|CommandlineInProgress).*$/"
     },
     {
       "key": "tab",

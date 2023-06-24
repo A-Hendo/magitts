@@ -3,11 +3,11 @@ import { Section } from '../general/sectionHeader';
 import { TextView } from '../general/textView';
 
 export class HunkView extends TextView {
-  isFoldable = true;
+	isFoldable = true;
 
-  get id() { return this.changeHunk.diff; }
+	get id() { return this.changeHunk.diff; }
 
-  constructor(public section: Section, public changeHunk: MagitChangeHunk) {
-    super(changeHunk.diff);
-  }
+	constructor (public section: Section, public changeHunk: MagitChangeHunk) {
+		super(changeHunk.diff);
+	}
 }

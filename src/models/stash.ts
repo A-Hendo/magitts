@@ -1,4 +1,4 @@
 export interface Stash {
-  index: number;
-  description: string;
+	index: number;
+	description: string;
 }

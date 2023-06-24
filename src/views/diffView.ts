@@ -1,27 +1,27 @@
-import { DocumentView } from './general/documentView';
 import { Uri } from 'vscode';
 import * as Constants from '../common/constants';
-import { TextView } from './general/textView';
 import { MagitRepository } from '../models/magitRepository';
+import { DocumentView } from './general/documentView';
+import { TextView } from './general/textView';
 
 export class DiffView extends DocumentView {
 
-  static UriPath: string = 'diff.magit';
-  isHighlightable = false;
-  needsUpdate = false;
+	static UriPath: string = 'diff.magit';
+	isHighlightable = false;
+	needsUpdate = false;
 
-  constructor(uri: Uri, private diff: string) {
-    super(uri);
+	constructor (uri: Uri, private diff: string) {
+		super(uri);
 
-    const diffTextView = new TextView(diff);
-    diffTextView.isHighlightable = false;
-    this.addSubview(diffTextView);
-  }
+		const diffTextView = new TextView(diff);
+		diffTextView.isHighlightable = false;
+		this.addSubview(diffTextView);
+	}
 
-  public update(state: MagitRepository): void { }
+	public update(state: MagitRepository): void { }
 
-  static index = 0;
-  static encodeLocation(repository: MagitRepository, diffId: string): Uri {
-    return Uri.parse(`${Constants.MagitUriScheme}:${DiffView.UriPath}?${repository.uri.fsPath}#${diffId}${DiffView.index++}`);
-  }
+	static index = 0;
+	static encodeLocation(repository: MagitRepository, diffId: string): Uri {
+		return Uri.parse(`${Constants.MagitUriScheme}:${DiffView.UriPath}?${repository.uri.fsPath}#${diffId}${DiffView.index++}`);
+	}
 }

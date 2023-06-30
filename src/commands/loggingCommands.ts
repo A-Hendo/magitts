@@ -22,9 +22,11 @@ const loggingMenu = {
 };
 
 const switches: Switch[] = [
-	{ key: '-D', name: '--simplify-by-decoration', description: 'Simplify by decoration' },
+	{ key: '-D', name: '--simplify-by-decoration', description: 'Simplify by decoration', activated: false },
 	{ key: '-g', name: '--graph', description: 'Show graph', activated: true },
-	{ key: '-d', name: '--decorate', description: 'Show refnames', activated: true }
+	{ key: '-d', name: '--decorate', description: 'Show refnames', activated: true },
+	{ key: '-p', name: '--patch', description: 'Show diffs', activated: false },
+	{ key: '-s', name: '--stat', description: 'Show diffstats', activated: false },
 ];
 
 const options: Option[] = [
@@ -120,11 +122,18 @@ function createLogArgs(switches: Switch[], options: Option[]) {
 	const decorateFormat = switchMap['-d'].activated ? '%d' : '';
 	const formatArg = `--format=%H${decorateFormat} [%an] [%at]%s`;
 	const args = ['log', formatArg, '--use-mailmap', ...MenuUtil.optionsToArgs(options)];
+
 	if (switchMap['-D'].activated) {
 		args.push(switchMap['-D'].name);
 	}
 	if (switchMap['-g'].activated) {
 		args.push(switchMap['-g'].name);
+	}
+	if (switchMap['-s'].activated) {
+		args.push(switchMap['-s'].name);
+	}
+	if (switchMap['-p'].activated) {
+		args.push(switchMap['-p'].name);
 	}
 	return args;
 }

@@ -144,9 +144,10 @@ function parseLog(stdout: string): MagitLogEntry[] {
 		'g');
 	// regex to match graph only line
 	const graphRe = /^[/|\\-_* .o]+$/g;
+	const shaRe = new RegExp('([a-f0-9]{40})');
 
 	lines?.forEach(l => {
-		if (l.match(graphRe)) { //graph only
+		if (l.match(graphRe) || !l.match(shaRe)) {
 			// Add to previous commits
 			commits[commits.length - 1]?.graph?.push(l);
 		} else {

@@ -15,6 +15,7 @@ export interface MenuState {
   repository: MagitRepository;
   switches?: Switch[];
   options?: Option[];
+  tags?: Tag[];
   data?: any;
 }
 
@@ -23,11 +24,12 @@ export interface Switch {
   name: string;
   description: string;
   activated?: boolean;
+  value?: string | undefined;
 }
 
-export interface Option extends Switch {
-  value?: string;
-}
+export interface Option extends Switch { }
+
+export interface Tag extends Switch { }
 
 export class MenuUtil {
 
@@ -37,14 +39,21 @@ export class MenuUtil {
 
     if (menuState.switches) {
 
-      const activeSwitches = menuState.switches.filter(s => s.activated).map(s => s.name).join(' ');
+      let activeSwitches: string = '';
+
+      menuState.switches.filter(t => t.activated).map(t => {
+        if (t.value !== undefined) {
+          activeSwitches += `${t.name}"${t.value}" `;
+        } else {
+          activeSwitches += `${t.name} `;
+        }
+      })
       const activeSwitchesPresentation = `[ ${activeSwitches} ]`;
 
       menuItems.push({
         label: '-',
         description: `\tSwitches ${activeSwitches.length > 0 ? activeSwitchesPresentation : ''}`,
         action: async (menuState: MenuState) => {
-
           const updatedSwitches = await MenuUtil.showSwitchesMenu(menuState);
           return MenuUtil.showMenu(menu, { ...menuState, switches: updatedSwitches });
         }
@@ -53,16 +62,46 @@ export class MenuUtil {
 
     if (menuState.options) {
 
-      const activeOptions = menuState.options.filter(s => s.activated).map(s => `${s.name}"${s.value}"`).join(' ');
+      let activeOptions: string = '';
+
+      menuState.options.filter(t => t.activated).map(t => {
+        if (t.value !== undefined) {
+          activeOptions += `${t.name}"${t.value}" `;
+        } else {
+          activeOptions += `${t.name} `;
+        }
+      })
       const activeOptionsPresentation = `[ ${activeOptions} ]`;
 
       menuItems.push({
         label: '=',
         description: `\tOptions ${activeOptions.length > 0 ? activeOptionsPresentation : ''}`,
         action: async (menuState: MenuState) => {
-
           const updatedOptions = await MenuUtil.showOptionsMenu(menuState);
           return MenuUtil.showMenu(menu, { ...menuState, options: updatedOptions });
+        }
+      });
+    }
+
+    if (menuState.tags) {
+      let activeTags: string = '';
+
+      menuState.tags.filter(t => t.activated).map(t => {
+        if (t.value !== undefined) {
+          activeTags += `${t.name}"${t.value}" `;
+        } else {
+          activeTags += `${t.name} `;
+        }
+      })
+
+      const activeTagsPresentation = `[ ${activeTags} ]`;
+
+      menuItems.push({
+        label: '/',
+        description: `\tTags ${activeTags.length > 0 ? activeTagsPresentation : ''}`,
+        action: async (menuState: MenuState) => {
+          const updatedTags = await MenuUtil.showTagsMenu(menuState);
+          return MenuUtil.showMenu(menu, { ...menuState, tags: updatedTags });
         }
       });
     }
@@ -75,7 +114,11 @@ export class MenuUtil {
   }
 
   static optionsToArgs(options?: Option[]): string[] {
-    return options?.filter(s => s.activated).map(s => `${s.name}${s.value}`) ?? [];
+    return options?.filter(s => s.activated).map(s => s.value !== undefined ? `${s.name}${s?.value}` : s.name) ?? [];
+  }
+
+  static tagsToArgs(tags?: Tag[]): string[] {
+    return tags?.filter(s => s.activated).map(s => s.value !== undefined ? `${s.name}${s?.value}` : s.name) ?? [];
   }
 
   private static runMenu(menu: Menu, menuState: MenuState): Promise<void> {
@@ -163,7 +206,7 @@ export class MenuUtil {
 
   private static showOptionsMenu(menuState: MenuState): Promise<Option[]> {
 
-    let items = menuState.options!.map(s => ({ label: s.key, description: `\t${s.description}\t${s.activated ? `${s.name}"${s.value}"` : s.name}`, picked: s.activated }));
+    let items = menuState.options!.map(s => ({ label: s.key, description: `\t${s.description}\t${s.activated && s.value !== undefined ? `${s.name}"${s?.value}"` : s.name}`, picked: s.activated }));
 
     let getUpdatedOptions = (quickPick: QuickPick<QuickPickItem>, { options }: MenuState) => options!.map(s => {
       let selectedItem = quickPick.selectedItems.find(item => item.label === s.key);
@@ -176,9 +219,7 @@ export class MenuUtil {
 
     return MenuUtil.showSwitchLikeMenu<Option[]>(items, menuState,
       async (item) => {
-        let [prompt, oldVal, ...rest] = item.detail!.split('"');
-        let val = !item.picked ? await window.showInputBox({ prompt: `${prompt}=` }) : oldVal;
-        return { ...item, picked: !item.picked, detail: `${prompt}"${val}"` };
+        return { ...item, picked: !item.picked };
       },
       getUpdatedOptions,
       'Options (press the letter of the option you want to set)',
@@ -187,10 +228,35 @@ export class MenuUtil {
     );
   }
 
+  private static showTagsMenu(menuState: MenuState): Promise<Tag[]> {
+
+    let items = menuState.tags!.map(s => ({ label: s.key, description: `\t${s.description}\t${s.activated ? `${s.name}"${s?.value}"` : s.name}`, picked: s.activated }));
+
+    let getUpdatedTags = (quickPick: QuickPick<QuickPickItem>, { tags }: MenuState) => tags!.map(s => {
+      let selectedItem = quickPick.selectedItems.find(item => item.label === s.key);
+      return {
+        ...s,
+        activated: selectedItem !== undefined,
+        value: selectedItem?.detail?.split('"')[1]
+      };
+    });
+
+    return MenuUtil.showSwitchLikeMenu<Tag[]>(items, menuState,
+      async (item) => {
+        return { ...item, picked: !item.picked };
+      },
+      getUpdatedTags,
+      'Tags (press letter for tags you want to enable)',
+      true,
+      '/'
+    );
+  }
+
   private static matchesSwitchOrOption(input: string, switchkey: string): boolean {
     return input === switchkey ||
       input === switchkey.replace('-', '') ||
-      input === switchkey.replace('=', '');
+      input === switchkey.replace('=', '') ||
+      input === switchkey.replace('/', '');
   }
 
   private static showSwitchLikeMenu<T>(
@@ -205,7 +271,7 @@ export class MenuUtil {
     return new Promise((resolve, reject) => {
 
       let resolveOnHide = true;
-      let shouldDispose = true;
+      let shouldDispose = false;
       const _quickPick = window.createQuickPick<QuickPickItem>();
 
       _quickPick.canSelectMany = canSelectMany;
@@ -224,6 +290,7 @@ export class MenuUtil {
           return;
         }
         let quickPickValue = _quickPick.value;
+        _quickPick.value = '';
 
         shouldDispose = false;
 

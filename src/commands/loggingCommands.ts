@@ -33,6 +33,8 @@ const switches: Switch[] = [
 	{ key: '-p', name: '--patch', description: 'Show diffs', activated: false },
 	{ key: '-s', name: '--stat', description: 'Show diffstats', activated: false },
 	{ key: '-r', name: '--reverse', description: 'Reverse order', activated: false },
+	{ key: '/m', name: '--simplify-merges', description: 'Prune some history', activated: false },
+	{ key: '/f', name: '--full-history', description: 'Do not prune history', activated: false },
 ];
 
 const options: Option[] = [
@@ -161,6 +163,12 @@ function createLogArgs(switches: Switch[], options: Option[]) {
 	}
 	if (switchMap['=p'].activated) {
 		args.push(switchMap['=p'].name);
+	}
+	if (switchMap['/m'].activated) {
+		args.push(switchMap['/m'].name);
+	}
+	if (switchMap['/f'].activated) {
+		args.push(switchMap['/f'].name);
 	}
 
 

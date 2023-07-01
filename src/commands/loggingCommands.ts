@@ -29,6 +29,7 @@ const switches: Switch[] = [
 	{ key: '=m', name: '--no-merges', description: 'Omit merges', activated: false },
 	{ key: '=S', name: '--show-signature', description: 'Show signatures', activated: false },
 	{ key: '=p', name: '--first-parent', description: 'First parent', activated: false },
+	// { key: '-h', name: '++header', description: 'Show header', activated: false },
 	{ key: '-p', name: '--patch', description: 'Show diffs', activated: false },
 	{ key: '-s', name: '--stat', description: 'Show diffstats', activated: false },
 ];
@@ -136,6 +137,9 @@ function createLogArgs(switches: Switch[], options: Option[]) {
 	if (switchMap['-c'].activated) {
 		args.push(switchMap['-c'].name);
 	}
+	// if (switchMap['-h'].activated) {
+	// 	args.push(switchMap['-h'].name);
+	// }
 	if (switchMap['-s'].activated) {
 		args.push(switchMap['-s'].name);
 	}

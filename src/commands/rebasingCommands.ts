@@ -22,13 +22,13 @@ export async function rebasing(repository: MagitRepository) {
 	} else {
 
 		const switches = [
-			{ key: '-k', name: '--keep-empty', description: 'Keep empty commits' },
-			{ key: '-p', name: '--rebase-merges', description: 'Rebase merges' },
-			{ key: '-c', name: '--committer-date-is-author-date', description: 'Lie about committer date' },
-			{ key: '-a', name: '--autosquash', description: 'Autosquash' },
+			{ key: '-k', name: '--keep-empty', description: 'Keep empty commits', activated: false },
+			{ key: '-r', name: '--rebase-merges', description: 'Rebase merges', activated: false },
+			{ key: '-d', name: '--committer-date-is-author-date', description: 'Lie about committer date', activated: false },
+			{ key: '-a', name: '--autosquash', description: 'Autosquash', activated: false },
 			{ key: '-A', name: '--autostash', description: 'Autostash', activated: true },
-			{ key: '-i', name: '--interactive', description: 'Interactive' },
-			{ key: '-h', name: '--no-verify', description: 'Disable hooks' },
+			{ key: '-i', name: '--interactive', description: 'Interactive', activated: false },
+			{ key: '-h', name: '--no-verify', description: 'Disable hooks', activated: false },
 		];
 
 		const HEAD = repository.HEAD;

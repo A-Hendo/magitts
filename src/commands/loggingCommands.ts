@@ -4,7 +4,6 @@ import { MenuState, MenuUtil, Option, Switch } from '../menu/menu';
 import { MagitBranch } from '../models/magitBranch';
 import { MagitLogEntry } from '../models/magitLogCommit';
 import { MagitRepository } from '../models/magitRepository';
-import { Parser } from '../utils/ansi';
 import { LogLevel, gitRun } from '../utils/gitRawRunner';
 import MagitUtils from '../utils/magitUtils';
 import ViewUtils from '../utils/viewUtils';
@@ -237,7 +236,6 @@ function createLogArgs(switches: Switch[], options: Option[]) {
 }
 
 function parseLog(stdout: string): MagitLogEntry[] {
-	const parser: Parser = new Parser();
 	const commits: MagitLogEntry[] = [];
 	// Split stdout lines
 	const lines = stdout.match(/[^\r\n]+/g);

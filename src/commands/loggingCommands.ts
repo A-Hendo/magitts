@@ -37,6 +37,20 @@ const switches: Switch[] = [
 	{ key: '/f', name: '--full-history', description: 'Do not prune history', activated: false },
 	{ key: '/s', name: '--sparse', description: 'Only commits changing given paths', activated: false },
 	{ key: '/d', name: '--dense', description: 'Only selected commits plus meaningful history', activated: false },
+	// { key: '/a', name: '--ancestry-path', description: 'Only commits existing directly on ancestry path', activated: false, value: '' },
+	// { key: '-f', name: '--follow', description: 'Follow renames when showing single-file log', activated: false, value: '' },
+	// { key: '--', name: '--', description: 'Limit to files', activated: false, value: '' },
+	// { key: '-o', name: '--[topo|author-date|date]-order', description: 'Order commits by', activated: false, value: '' },
+	// { key: '-A', name: '--author=', description: 'Limit to author', activated: false, value: '' },
+	// { key: '=s', name: '--since=', description: 'Limit to commits since', activated: false, value: '' },
+	// { key: '=u', name: '--until=', description: 'Limit to commits until', activated: false, value: '' },
+	// { key: '-F', name: '--grep', description: 'Search messages', activated: false, value: '' },
+	// { key: '-i', name: '--regexp-ignore-case', description: 'Search case-insensitive', activated: false, value: '' },
+	// { key: '-I', name: '--invert-grep', description: 'Invert search pattern', activated: false, value: '' },
+	// { key: '-G', name: '-G', description: 'Search changes', activated: false, value: '' },
+	// { key: '-S', name: '-S', description: 'Search occurrences', activated: false, value: '' },
+	// { key: '-L', name: '-L', description: 'Trace line evolution', activated: false, value: '' },
+
 ];
 
 const options: Option[] = [
@@ -178,6 +192,45 @@ function createLogArgs(switches: Switch[], options: Option[]) {
 	if (switchMap['/d'].activated) {
 		args.push(switchMap['/d'].name);
 	}
+	// if (switchMap['/a'].activated) {
+	// 	args.push(switchMap['/a'].name);
+	// }
+	// if (switchMap['-f'].activated) {
+	// 	args.push(switchMap['-f'].name);
+	// }
+	// if (switchMap['--'].activated) {
+	// 	args.push(switchMap['--'].name);
+	// }
+	// if (switchMap['-o'].activated) {
+	// 	args.push(switchMap['-o'].name);
+	// }
+	// if (switchMap['-A'].activated) {
+	// 	args.push(switchMap['-A'].name);
+	// }
+	// if (switchMap['=s'].activated) {
+	// 	args.push(switchMap['=s'].name);
+	// }
+	// if (switchMap['=u'].activated) {
+	// 	args.push(switchMap['=u'].name);
+	// }
+	// if (switchMap['-F'].activated) {
+	// 	args.push(switchMap['-F'].name);
+	// }
+	// if (switchMap['-i'].activated) {
+	// 	args.push(switchMap['-i'].name);
+	// }
+	// if (switchMap['-I'].activated) {
+	// 	args.push(switchMap['-I'].name);
+	// }
+	// if (switchMap['-G'].activated) {
+	// 	args.push(switchMap['-G'].name);
+	// }
+	// if (switchMap['-S'].activated) {
+	// 	args.push(switchMap['-S'].name);
+	// }
+	// if (switchMap['-L'].activated) {
+	// 	args.push(`switchMap['-L'].name`);
+	// }
 
 
 	return args;

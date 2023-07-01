@@ -224,7 +224,6 @@ export class MenuUtil {
           return;
         }
         let quickPickValue = _quickPick.value;
-        _quickPick.value = '';
 
         shouldDispose = false;
 

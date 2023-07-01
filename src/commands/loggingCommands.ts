@@ -4,11 +4,11 @@ import { MenuState, MenuUtil, Option, Switch } from '../menu/menu';
 import { MagitBranch } from '../models/magitBranch';
 import { MagitLogEntry } from '../models/magitLogCommit';
 import { MagitRepository } from '../models/magitRepository';
+import { Parser } from '../utils/ansi';
 import { LogLevel, gitRun } from '../utils/gitRawRunner';
 import MagitUtils from '../utils/magitUtils';
 import ViewUtils from '../utils/viewUtils';
 import LogView from '../views/logView';
-
 const loggingMenu = {
 	title: 'Logging',
 	commands: [
@@ -24,9 +24,11 @@ const loggingMenu = {
 const switches: Switch[] = [
 	{ key: '-D', name: '--simplify-by-decoration', description: 'Simplify by decoration', activated: false },
 	{ key: '-g', name: '--graph', description: 'Show graph', activated: true },
+	{ key: '-c', name: '--color', description: 'Show graph in color', activated: false },
 	{ key: '-d', name: '--decorate', description: 'Show refnames', activated: true },
 	{ key: '=m', name: '--no-merges', description: 'Omit merges', activated: false },
 	{ key: '=S', name: '--show-signature', description: 'Show signatures', activated: false },
+	{ key: '=p', name: '--first-parent', description: 'First parent', activated: false },
 	{ key: '-p', name: '--patch', description: 'Show diffs', activated: false },
 	{ key: '-s', name: '--stat', description: 'Show diffstats', activated: false },
 ];
@@ -131,6 +133,9 @@ function createLogArgs(switches: Switch[], options: Option[]) {
 	if (switchMap['-g'].activated) {
 		args.push(switchMap['-g'].name);
 	}
+	if (switchMap['-c'].activated) {
+		args.push(switchMap['-c'].name);
+	}
 	if (switchMap['-s'].activated) {
 		args.push(switchMap['-s'].name);
 	}
@@ -143,11 +148,15 @@ function createLogArgs(switches: Switch[], options: Option[]) {
 	if (switchMap['=S'].activated) {
 		args.push(switchMap['=S'].name);
 	}
+	if (switchMap['=p'].activated) {
+		args.push(switchMap['=p'].name);
+	}
 
 	return args;
 }
 
 function parseLog(stdout: string): MagitLogEntry[] {
+	const parser: Parser = new Parser();
 	const commits: MagitLogEntry[] = [];
 	// Split stdout lines
 	const lines = stdout.match(/[^\r\n]+/g);

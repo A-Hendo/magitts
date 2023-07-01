@@ -35,6 +35,8 @@ const switches: Switch[] = [
 	{ key: '-r', name: '--reverse', description: 'Reverse order', activated: false },
 	{ key: '/m', name: '--simplify-merges', description: 'Prune some history', activated: false },
 	{ key: '/f', name: '--full-history', description: 'Do not prune history', activated: false },
+	{ key: '/s', name: '--sparse', description: 'Only commits changing given paths', activated: false },
+	{ key: '/d', name: '--dense', description: 'Only selected commits plus meaningful history', activated: false },
 ];
 
 const options: Option[] = [
@@ -169,6 +171,12 @@ function createLogArgs(switches: Switch[], options: Option[]) {
 	}
 	if (switchMap['/f'].activated) {
 		args.push(switchMap['/f'].name);
+	}
+	if (switchMap['/s'].activated) {
+		args.push(switchMap['/s'].name);
+	}
+	if (switchMap['/d'].activated) {
+		args.push(switchMap['/d'].name);
 	}
 
 

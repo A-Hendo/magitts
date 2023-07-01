@@ -32,6 +32,7 @@ const switches: Switch[] = [
 	// { key: '-h', name: '++header', description: 'Show header', activated: false },
 	{ key: '-p', name: '--patch', description: 'Show diffs', activated: false },
 	{ key: '-s', name: '--stat', description: 'Show diffstats', activated: false },
+	{ key: '-r', name: '--reverse', description: 'Reverse order', activated: false },
 ];
 
 const options: Option[] = [
@@ -128,6 +129,12 @@ function createLogArgs(switches: Switch[], options: Option[]) {
 	const formatArg = `--format=%H${decorateFormat} [%an] [%at]%s`;
 	const args = ['log', formatArg, '--use-mailmap', ...MenuUtil.optionsToArgs(options)];
 
+	if (switchMap['-r'].activated) {
+		args.push(switchMap['-r'].name);
+
+		// -g graph must be false
+		switchMap['-g'].activated = false;
+	}
 	if (switchMap['-D'].activated) {
 		args.push(switchMap['-D'].name);
 	}
@@ -155,6 +162,7 @@ function createLogArgs(switches: Switch[], options: Option[]) {
 	if (switchMap['=p'].activated) {
 		args.push(switchMap['=p'].name);
 	}
+
 
 	return args;
 }

@@ -23,6 +23,7 @@ const commitMenu = {
 		{ label: 'w', description: 'Reword', action: (menuState: MenuState) => rewordCommit(menuState, ['--amend', '--only']) },
 		{ label: 'f', description: 'Fixup', action: (menuState: MenuState) => fixup(menuState) },
 		{ label: 'F', description: 'Instant Fixup', action: (menuState: MenuState) => instantFixup(menuState) },
+		// { label: 'S', description: 'Instant Squash', action: (menuState: MenuState) => instantSquash(menuState) },
 	]
 };
 
@@ -31,9 +32,13 @@ export async function magitCommit(repository: MagitRepository) {
 	const switches = [
 		{ key: '-a', name: '--all', description: 'Stage all modified and deleted files' },
 		{ key: '-e', name: '--allow-empty', description: 'Allow empty commit' },
-		{ key: '-s', name: '--signoff', description: 'Add Signed-off-by line' },
+		{ key: '-v', name: '--verbose', description: 'Show diff of changes to be commited' },
 		{ key: '-n', name: '--no-verify', description: 'Disable hooks' },
+		{ key: '-R', name: '--reset-author', description: 'Claim authorship and reset author date' },
+		// { key: '-A', name: '--author=', description: 'Override the author', input: true },
+		{ key: '-s', name: '--signoff', description: 'Add Signed-off-by line' },
 		{ key: '-S', name: '--gpg-sign', description: 'GPG-sign commit' },
+		// { key: '-C', name: '--reuse-message=', description: 'Reuse commit message', input: true },
 	];
 
 	return MenuUtil.showMenu(commitMenu, { repository, switches });
@@ -91,6 +96,22 @@ async function instantFixup({ repository, switches = [] }: MenuState) {
 		throw new Error('No commit chosen to fixup');
 	}
 }
+
+// async function instantSquash({ repository, switches = [] }: MenuState) {
+// 	const sha = await MagitUtils.chooseCommit(repository, 'Instantly Fixup commit');
+
+// 	if (sha) {
+// 		let shortHash = GitTextUtils.shortHash(sha);
+
+// 		await gitRun(repository.gitRepository, ['commit', '--no-gpg-sign', '--no-edit', ...MenuUtil.switchesToArgs(switches), `--fixup=${shortHash}`, '--']);
+
+// 		const args = ['rebase', '-i', '--autosquash', '--autostash', shortHash + '~'];
+
+// 		return await gitRun(repository.gitRepository, args, { env: { 'GIT_SEQUENCE_EDITOR': 'true' } });
+// 	} else {
+// 		throw new Error('No commit chosen to fixup');
+// 	}
+// }
 
 interface CommitEditorOptions {
 	updatePostCommitTask?: boolean;

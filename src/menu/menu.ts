@@ -25,6 +25,7 @@ export interface Switch {
   description: string;
   activated?: boolean;
   value?: string | undefined;
+  input?: boolean | false;
 }
 
 export interface Option extends Switch { }

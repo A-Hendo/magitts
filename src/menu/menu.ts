@@ -8,7 +8,7 @@ export interface Menu {
 }
 
 export interface MenuItem extends QuickPickItem {
-  action: (menuState: MenuState) => Promise<any>;
+  action?: (any: any) => Promise<any>;
 }
 
 export interface MenuState {
@@ -19,8 +19,8 @@ export interface MenuState {
   data?: any;
 }
 
-export interface Switch {
-  key: string;
+export interface Switch extends MenuItem {
+  label: string;
   name: string;
   description: string;
   activated?: boolean;
@@ -144,7 +144,7 @@ export class MenuUtil {
           resolveOnHide = false;
           _quickPick.hide();
           try {
-            await chosenItems[0].action(menuState);
+            chosenItems[0].action !== undefined ? await chosenItems[0].action(menuState) : undefined;
             resolve();
           } catch (error) {
             reject(error);
@@ -161,7 +161,7 @@ export class MenuUtil {
           resolveOnHide = false;
           _quickPick.hide();
           try {
-            await chosenItems.action(menuState);
+            chosenItems.action !== undefined ? await chosenItems.action(menuState) : undefined;
             resolve();
           } catch (error) {
             reject(error);
@@ -185,18 +185,19 @@ export class MenuUtil {
 
   private static showSwitchesMenu(menuState: MenuState): Promise<Switch[]> {
 
-    let getUpdatedSwitches = (quickPick: QuickPick<QuickPickItem>, { switches }: MenuState) => switches!.map(s =>
+    let getUpdatedSwitches = (quickPick: QuickPick<Switch>, { switches }: MenuState) => switches!.map(s =>
     ({
       ...s,
-      activated: quickPick.selectedItems.find(item => item.label === s.key) !== undefined
+      activated: quickPick.selectedItems.find(item => item.label === s.label) !== undefined
     })
     );
 
-    let items = menuState.switches!.map(s => ({ label: s.key, description: `\t${s.description}\t${s.name}`, picked: s.activated }));
+    let items = menuState.switches!.map(s => ({ label: s.label, description: `\t${s.description}\t${s.name}`, picked: s.activated, action: s?.action }) as Switch);
+
 
     return MenuUtil.showSwitchLikeMenu<Switch[]>(items, menuState,
       async (item) => {
-        return { ...item, picked: !item.picked };
+        return { ...item, picked: !item.picked, action: item?.action };
       },
       getUpdatedSwitches,
       'Switches (press letter for switches you want to enable)',
@@ -207,10 +208,10 @@ export class MenuUtil {
 
   private static showOptionsMenu(menuState: MenuState): Promise<Option[]> {
 
-    let items = menuState.options!.map(s => ({ label: s.key, description: `\t${s.description}\t${s.activated && s.value !== undefined ? `${s.name}"${s?.value}"` : s.name}`, picked: s.activated }));
+    let items = menuState.options!.map(s => ({ label: s.label, description: `\t${s.description}\t${s.activated && s.value !== undefined ? `${s.name}"${s?.value}"` : s.name}`, picked: s.activated }) as Switch);
 
-    let getUpdatedOptions = (quickPick: QuickPick<QuickPickItem>, { options }: MenuState) => options!.map(s => {
-      let selectedItem = quickPick.selectedItems.find(item => item.label === s.key);
+    let getUpdatedOptions = (quickPick: QuickPick<Switch>, { options }: MenuState) => options!.map(s => {
+      let selectedItem = quickPick.selectedItems.find(item => item.label === s.label);
       return {
         ...s,
         activated: selectedItem !== undefined,
@@ -231,10 +232,10 @@ export class MenuUtil {
 
   private static showTagsMenu(menuState: MenuState): Promise<Tag[]> {
 
-    let items = menuState.tags!.map(s => ({ label: s.key, description: `\t${s.description}\t${s.activated ? `${s.name}"${s?.value}"` : s.name}`, picked: s.activated }));
+    let items = menuState.tags!.map(s => ({ label: s.label, description: `\t${s.description}\t${s.activated ? `${s.name}"${s?.value}"` : s.name}`, picked: s.activated }) as Switch);
 
-    let getUpdatedTags = (quickPick: QuickPick<QuickPickItem>, { tags }: MenuState) => tags!.map(s => {
-      let selectedItem = quickPick.selectedItems.find(item => item.label === s.key);
+    let getUpdatedTags = (quickPick: QuickPick<Switch>, { tags }: MenuState) => tags!.map(s => {
+      let selectedItem = quickPick.selectedItems.find(item => item.label === s.label);
       return {
         ...s,
         activated: selectedItem !== undefined,
@@ -261,10 +262,10 @@ export class MenuUtil {
   }
 
   private static showSwitchLikeMenu<T>(
-    items: QuickPickItem[],
+    items: Switch[],
     menuState: MenuState,
-    processItemSelection: (q: QuickPickItem) => Promise<QuickPickItem>,
-    getUpdatedState: (q: QuickPick<QuickPickItem>, m: MenuState) => T,
+    processItemSelection: (q: Switch) => Promise<Switch>,
+    getUpdatedState: (q: QuickPick<Switch>, m: MenuState) => T,
     title = '',
     canSelectMany = false,
     ignoreKey?: string): Promise<T> {
@@ -273,7 +274,7 @@ export class MenuUtil {
 
       let resolveOnHide = true;
       let shouldDispose = false;
-      const _quickPick = window.createQuickPick<QuickPickItem>();
+      const _quickPick = window.createQuickPick<Switch>();
 
       _quickPick.canSelectMany = canSelectMany;
       _quickPick.title = title;
@@ -283,7 +284,6 @@ export class MenuUtil {
       }
 
       const eventListenerDisposable = _quickPick.onDidChangeValue(async (e) => {
-
         if (_quickPick.value === 'q') {
           return _quickPick.hide();
         }
@@ -295,7 +295,14 @@ export class MenuUtil {
 
         shouldDispose = false;
 
-        let updated: QuickPickItem[] = [];
+        // const chosenItems = _quickPick.activeItems[0] as Switch;
+        // try {
+        //   chosenItems.action !== undefined ? await chosenItems?.action(menuState) : undefined;
+        // } catch (error) {
+        //   reject(error);
+        // }
+
+        let updated: Switch[] = [];
 
         for (let item of _quickPick.items) {
           if (MenuUtil.matchesSwitchOrOption(quickPickValue, item.label)) {
@@ -317,9 +324,17 @@ export class MenuUtil {
         _quickPick.show();
       });
 
-      const acceptListenerDisposable = _quickPick.onDidAccept(() => {
+      const acceptListenerDisposable = _quickPick.onDidAccept(async () => {
         resolveOnHide = false;
         _quickPick.hide();
+
+        const chosenItems = _quickPick.activeItems[0] as Switch;
+        try {
+          chosenItems?.action !== undefined ? await chosenItems?.action(menuState) : undefined;
+        } catch (error) {
+          reject(error);
+        }
+
         resolve(getUpdatedState(_quickPick, menuState));
       });
 

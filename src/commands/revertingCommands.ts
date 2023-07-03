@@ -28,8 +28,8 @@ export async function reverting(repository: MagitRepository) {
 	} else {
 
 		const switches = [
-			{ key: '-e', name: '--edit', description: 'Edit commit message', activated: true },
-			{ key: '-E', name: '--no-edit', description: 'Don\'t edit commit message' },
+			{ label: '-e', name: '--edit', description: 'Edit commit message', activated: true },
+			{ label: '-E', name: '--no-edit', description: 'Don\'t edit commit message' },
 		];
 
 		return MenuUtil.showMenu(revertingMenu, { repository, switches });
@@ -40,7 +40,7 @@ async function revertCommit({ repository, switches }: MenuState) {
 	const target = await MagitUtils.chooseRef(repository, 'Revert commit(s)', true, true);
 
 	if (target) {
-		return revert(repository, target, { edit: switches?.find(s => s.key === '-e' && s.activated) ? true : false });
+		return revert(repository, target, { edit: switches?.find(s => s.label === '-e' && s.activated) ? true : false });
 	}
 }
 

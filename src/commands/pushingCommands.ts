@@ -36,10 +36,10 @@ function generatePushingMenu(repository: MagitRepository) {
 export async function pushing(repository: MagitRepository) {
 
 	const switches = [
-		{ key: '-f', name: '--force-with-lease', description: 'Force with lease' },
-		{ key: '-F', name: '--force', description: 'Force' },
-		{ key: '-h', name: '--no-verify', description: 'Disable hooks' },
-		{ key: '-d', name: '--dry-run', description: 'Dry run' }
+		{ label: '-f', name: '--force-with-lease', description: 'Force with lease' },
+		{ label: '-F', name: '--force', description: 'Force' },
+		{ label: '-h', name: '--no-verify', description: 'Disable hooks' },
+		{ label: '-d', name: '--dry-run', description: 'Dry run' }
 	];
 
 	return MenuUtil.showMenu(generatePushingMenu(repository), { repository, switches });

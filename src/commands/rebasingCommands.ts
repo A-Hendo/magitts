@@ -22,15 +22,15 @@ export async function rebasing(repository: MagitRepository) {
 	} else {
 
 		const switches = [
-			{ key: '-k', name: '--keep-empty', description: 'Keep empty commits', activated: false },
-			{ key: '-p', name: '--preserve-merges', description: 'Preserve merges', activated: false },
-			{ key: '-r', name: '--rebase-merges', description: 'Rebase merges', activated: false },
-			{ key: '-d', name: '--committer-date-is-author-date', description: 'Lie about committer date', activated: false },
-			{ key: '-t', name: '--ignore-date', description: 'Use current time as author date', activated: false },
-			{ key: '-a', name: '--autosquash', description: 'Autosquash', activated: false },
-			{ key: '-A', name: '--autostash', description: 'Autostash', activated: true },
-			{ key: '-i', name: '--interactive', description: 'Interactive', activated: false },
-			{ key: '-h', name: '--no-verify', description: 'Disable hooks', activated: false },
+			{ label: '-k', name: '--keep-empty', description: 'Keep empty commits', activated: false },
+			{ label: '-p', name: '--preserve-merges', description: 'Preserve merges', activated: false },
+			{ label: '-r', name: '--rebase-merges', description: 'Rebase merges', activated: false },
+			{ label: '-d', name: '--committer-date-is-author-date', description: 'Lie about committer date', activated: false },
+			{ label: '-t', name: '--ignore-date', description: 'Use current time as author date', activated: false },
+			{ label: '-a', name: '--autosquash', description: 'Autosquash', activated: false },
+			{ label: '-A', name: '--autostash', description: 'Autostash', activated: true },
+			{ label: '-i', name: '--interactive', description: 'Interactive', activated: false },
+			{ label: '-h', name: '--no-verify', description: 'Disable hooks', activated: false },
 		];
 
 		const HEAD = repository.HEAD;

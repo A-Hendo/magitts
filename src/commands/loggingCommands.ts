@@ -21,43 +21,49 @@ const loggingMenu = {
 };
 
 const switches: Switch[] = [
-	{ key: '-D', name: '--simplify-by-decoration', description: 'Simplify by decoration', activated: false },
-	{ key: '-g', name: '--graph', description: 'Show graph', activated: true },
-	{ key: '-c', name: '--color', description: 'Show graph in color', activated: false },
-	{ key: '-d', name: '--decorate', description: 'Show refnames', activated: true },
-	// { key: '-h', name: '++header', description: 'Show header', activated: false },
-	{ key: '-p', name: '--patch', description: 'Show diffs', activated: false },
-	{ key: '-s', name: '--stat', description: 'Show diffstats', activated: false },
-	{ key: '-r', name: '--reverse', description: 'Reverse order', activated: false },
-	// { key: '-f', name: '--follow', description: 'Follow renames when showing single-file log', activated: false},
-	// { key: '--', name: '--', description: 'Limit to files', activated: false},
-	// { key: '-o', name: '--[topo|author-date|date]-order', description: 'Order commits by', activated: false },
-	// { key: '-A', name: '--author=', description: 'Limit to author', activated: false },
-	// { key: '-F', name: '--grep', description: 'Search messages', activated: false },
-	// { key: '-i', name: '--regexp-ignore-case', description: 'Search case-insensitive', activated: false },
-	// { key: '-I', name: '--invert-grep', description: 'Invert search pattern', activated: false },
-	// { key: '-G', name: '-G', description: 'Search changes', activated: false },
-	// { key: '-S', name: '-S', description: 'Search occurrences', activated: false },
-	// { key: '-L', name: '-L', description: 'Trace line evolution', activated: false },
+	{ label: '-D', name: '--simplify-by-decoration', description: 'Simplify by decoration', activated: false },
+	{ label: '-g', name: '--graph', description: 'Show graph', activated: true },
+	{ label: '-c', name: '--color', description: 'Show graph in color', activated: false },
+	{ label: '-d', name: '--decorate', description: 'Show refnames', activated: true },
+	// { label: '-h', name: '++header', description: 'Show header', activated: false },
+	{ label: '-p', name: '--patch', description: 'Show diffs', activated: false },
+	{ label: '-s', name: '--stat', description: 'Show diffstats', activated: false },
+	{ label: '-r', name: '--reverse', description: 'Reverse order', activated: false },
+	// { label: '-f', name: '--follow', description: 'Follow renames when showing single-file log', activated: false},
+	// { label: '--', name: '--', description: 'Limit to files', activated: false},
+	// { label: '-o', name: '--[topo|author-date|date]-order', description: 'Order commits by', activated: false },
+	{ label: '-A', name: '--author=', description: 'Limit to author', activated: false, action: async (menuState: MenuState) => await GetInput("-A", menuState) },
+	// { label: '-F', name: '--grep', description: 'Search messages', activated: false },
+	// { label: '-i', name: '--regexp-ignore-case', description: 'Search case-insensitive', activated: false },
+	// { label: '-I', name: '--invert-grep', description: 'Invert search pattern', activated: false },
+	// { label: '-G', name: '-G', description: 'Search changes', activated: false },
+	// { label: '-S', name: '-S', description: 'Search occurrences', activated: false },
+	// { label: '-L', name: '-L', description: 'Trace line evolution', activated: false },
 
 ];
 
 const options: Option[] = [
-	{ key: '=n', name: '-n', description: 'Limit number of commits', value: '256', activated: true },
-	{ key: '=m', name: '--no-merges', description: 'Omit merges', activated: false },
-	{ key: '=S', name: '--show-signature', description: 'Show signatures', activated: false },
-	{ key: '=p', name: '--first-parent', description: 'First parent', activated: false },
-	// { key: '=s', name: '--since=', description: 'Limit to commits since', activated: false},
-	// { key: '=u', name: '--until=', description: 'Limit to commits until', activated: false },
+	{ label: '=n', name: '-n', description: 'Limit number of commits', value: '256', activated: true },
+	{ label: '=m', name: '--no-merges', description: 'Omit merges', activated: false },
+	{ label: '=S', name: '--show-signature', description: 'Show signatures', activated: false },
+	{ label: '=p', name: '--first-parent', description: 'First parent', activated: false },
+	// { label: '=s', name: '--since=', description: 'Limit to commits since', activated: false},
+	// { label: '=u', name: '--until=', description: 'Limit to commits until', activated: false },
 ];
 
 const tags: Tag[] = [
-	{ key: '/m', name: '--simplify-merges', description: 'Prune some history', activated: false },
-	{ key: '/f', name: '--full-history', description: 'Do not prune history', activated: false },
-	{ key: '/s', name: '--sparse', description: 'Only commits changing given paths', activated: false },
-	{ key: '/d', name: '--dense', description: 'Only selected commits plus meaningful history', activated: false },
-	// { key: '/a', name: '--ancestry-path', description: 'Only commits existing directly on ancestry path', activated: false },
+	{ label: '/m', name: '--simplify-merges', description: 'Prune some history', activated: false },
+	{ label: '/f', name: '--full-history', description: 'Do not prune history', activated: false },
+	{ label: '/s', name: '--sparse', description: 'Only commits changing given paths', activated: false },
+	{ label: '/d', name: '--dense', description: 'Only selected commits plus meaningful history', activated: false },
+	// { label: '/a', name: '--ancestry-path', description: 'Only commits existing directly on ancestry path', activated: false },
 ];
+
+async function GetInput(label: string, { switches }: MenuState) {
+	const input = await window.showInputBox({ prompt: `USER INPUT` });
+	switches?.filter(s => s.label === label).map(s => s.value = input);
+	return;
+}
 
 export async function logging(repository: MagitRepository) {
 	return MenuUtil.showMenu(loggingMenu, { repository, switches, options, tags });
@@ -114,7 +120,7 @@ async function logReferences(repository: MagitRepository, head: MagitBranch, swi
 export async function logFile(repository: MagitRepository, fileUri: Uri) {
 	const incompatible_switch_keys = ['-g'];
 	const compatible_switches = switches.map(x => (
-		incompatible_switch_keys.includes(x.key) ? { ...x, activated: false } : { ...x }
+		incompatible_switch_keys.includes(x.label) ? { ...x, activated: false } : { ...x }
 	));
 	let args = createLogArgs(compatible_switches, options, tags);
 	args.push('--follow');
@@ -141,12 +147,12 @@ async function getRevs(repository: MagitRepository) {
 
 function createLogArgs(switches: Switch[], options: Option[], tags: Tag[]) {
 	const switchMap = switches.reduce((prev, current) => {
-		prev[current.key] = current;
+		prev[current.label] = current;
 		return prev;
 	}, {} as Record<string, Switch>);
 
 	const tagMap = tags.reduce((prev, current) => {
-		prev[current.key] = current;
+		prev[current.label] = current;
 		return prev;
 	}, {} as Record<string, Switch>);
 
@@ -155,9 +161,9 @@ function createLogArgs(switches: Switch[], options: Option[], tags: Tag[]) {
 	const args = ['log', formatArg, '--use-mailmap', ...MenuUtil.optionsToArgs(options), ...MenuUtil.tagsToArgs(tags)];
 
 	if (switchMap['-r'].activated) {
-		switches?.filter(s => s.key === '-g' ? s.activated = false : undefined);
+		switches?.filter(s => s.label === '-g' ? s.activated = false : undefined);
 	}
-	switches?.filter(s => s.activated && s.key !== '-d').map(s => args.push(s.name))
+	switches?.filter(s => s.activated && s.label !== '-d').map(s => args.push(s.name))
 
 	return args;
 }

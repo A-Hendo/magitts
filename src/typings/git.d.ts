@@ -166,7 +166,7 @@ export interface Repository {
 	readonly state: RepositoryState;
 	readonly ui: RepositoryUIState;
 
-	getConfigs(): Promise<{ key: string; value: string; }[]>;
+	getConfigs(): Promise<{ label: string; value: string; }[]>;
 	getConfig(key: string): Promise<string>;
 	setConfig(key: string, value: string): Promise<string>;
 	getGlobalConfig(key: string): Promise<string>;

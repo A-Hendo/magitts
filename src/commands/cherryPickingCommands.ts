@@ -31,8 +31,8 @@ export async function cherryPicking(repository: MagitRepository) {
 		return MenuUtil.showMenu(whileCherryPickingMenu, { repository });
 	} else {
 		const switches = [
-			{ key: '-e', name: '--edit', description: 'Edit commit messages' },
-			{ key: '-x', name: '-x', description: 'Reference cherry in commit message' },
+			{ label: '-e', name: '--edit', description: 'Edit commit messages' },
+			{ label: '-x', name: '-x', description: 'Reference cherry in commit message' },
 		];
 
 		return MenuUtil.showMenu(cherryPickingMenu, { repository, switches });
@@ -43,7 +43,7 @@ async function pick({ repository, switches }: MenuState) {
 	const target = await MagitUtils.chooseRef(repository, 'Cherry-pick');
 
 	if (target) {
-		return cherryPick(repository, target, { edit: switches?.find(s => s.key === '-e' && s.activated) ? true : false });
+		return cherryPick(repository, target, { edit: switches?.find(s => s.label === '-e' && s.activated) ? true : false });
 	}
 }
 

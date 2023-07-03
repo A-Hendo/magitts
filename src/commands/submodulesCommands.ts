@@ -24,13 +24,13 @@ const submodulesMenu = {
 export async function submodules(repository: MagitRepository) {
 
 	const switches = [
-		{ key: '-f', name: '--force', description: 'Force' },
-		{ key: '-r', name: '--recursive', description: 'Recursive' },
-		{ key: '-N', name: '--no-fetch', description: 'Do not fetch' },
-		{ key: '-C', name: '--checkout', description: 'Checkout tip' },
-		{ key: '-R', name: '--rebase', description: 'Rebase onto tip' },
-		{ key: '-M', name: '--merge', description: 'Merge tip' },
-		{ key: '-U', name: '--remote', description: 'Use upstream tip' }
+		{ label: '-f', name: '--force', description: 'Force' },
+		{ label: '-r', name: '--recursive', description: 'Recursive' },
+		{ label: '-N', name: '--no-fetch', description: 'Do not fetch' },
+		{ label: '-C', name: '--checkout', description: 'Checkout tip' },
+		{ label: '-R', name: '--rebase', description: 'Rebase onto tip' },
+		{ label: '-M', name: '--merge', description: 'Merge tip' },
+		{ label: '-U', name: '--remote', description: 'Use upstream tip' }
 	];
 
 	return MenuUtil.showMenu(submodulesMenu, { repository, switches });

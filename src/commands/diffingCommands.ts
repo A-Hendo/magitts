@@ -31,11 +31,11 @@ const diffingMenu = {
 export async function diffing(repository: MagitRepository) {
 
 	// const switches = [
-	// { key: '-f', name: '--function-context', description: 'Show surrounding functions' },
-	// { key: '-b', name: '--ignore-space-change', description: 'Ignore whitespace changes' },
-	// { key: '-w', name: '--ignore-all-space', description: 'Ignore all whitespace' },
-	// { key: '-x', name: '--no-ext-diff', description: 'Disallow external diff drivers', activated: true },
-	// { key: '-s', name: '--stat', description: 'Show stats', activated: true },
+	// { label: '-f', name: '--function-context', description: 'Show surrounding functions' },
+	// { label: '-b', name: '--ignore-space-change', description: 'Ignore whitespace changes' },
+	// { label: '-w', name: '--ignore-all-space', description: 'Ignore all whitespace' },
+	// { label: '-x', name: '--no-ext-diff', description: 'Disallow external diff drivers', activated: true },
+	// { label: '-s', name: '--stat', description: 'Show stats', activated: true },
 	// ];
 
 	return MenuUtil.showMenu(diffingMenu, { repository });

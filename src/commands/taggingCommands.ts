@@ -17,9 +17,9 @@ const taggingMenu = {
 export async function tagging(repository: MagitRepository) {
 
 	const switches = [
-		{ key: '-a', name: '--annotate', description: 'Annotate' },
-		{ key: '-f', name: '--force', description: 'Force' },
-		// { key: '-s', name: '--sign', description: 'Sign' }
+		{ label: '-a', name: '--annotate', description: 'Annotate' },
+		{ label: '-f', name: '--force', description: 'Force' },
+		// { label: '-s', name: '--sign', description: 'Sign' }
 	];
 
 	return MenuUtil.showMenu(taggingMenu, { repository, switches });
@@ -38,7 +38,7 @@ async function createTag({ repository, switches }: MenuState) {
 			const args = ['tag', ...MenuUtil.switchesToArgs(switches), tagName, ref];
 
 			if (
-				switches?.find(({ key, activated }) => key === '-a' && activated)
+				switches?.find(({ label, activated }) => label === '-a' && activated)
 			) {
 				return Commit.runCommitLikeCommand(repository, args, {
 					updatePostCommitTask: true,

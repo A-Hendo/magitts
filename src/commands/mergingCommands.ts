@@ -27,8 +27,8 @@ const whileMergingMenu = {
 
 export async function merging(repository: MagitRepository) {
 	const switches = [
-		{ key: '-f', name: '--ff-only', description: 'Fast-forward only' },
-		{ key: '-n', name: '--no-ff', description: 'No fast-forward' },
+		{ label: '-f', name: '--ff-only', description: 'Fast-forward only' },
+		{ label: '-n', name: '--no-ff', description: 'No fast-forward' },
 	];
 
 	if (repository.mergingState) {

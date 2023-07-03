@@ -30,15 +30,15 @@ const commitMenu = {
 export async function magitCommit(repository: MagitRepository) {
 
 	const switches = [
-		{ key: '-a', name: '--all', description: 'Stage all modified and deleted files' },
-		{ key: '-e', name: '--allow-empty', description: 'Allow empty commit' },
-		{ key: '-v', name: '--verbose', description: 'Show diff of changes to be commited' },
-		{ key: '-n', name: '--no-verify', description: 'Disable hooks' },
-		{ key: '-R', name: '--reset-author', description: 'Claim authorship and reset author date' },
-		// { key: '-A', name: '--author=', description: 'Override the author', input: true },
-		{ key: '-s', name: '--signoff', description: 'Add Signed-off-by line' },
-		{ key: '-S', name: '--gpg-sign', description: 'GPG-sign commit' },
-		// { key: '-C', name: '--reuse-message=', description: 'Reuse commit message', input: true },
+		{ label: '-a', name: '--all', description: 'Stage all modified and deleted files' },
+		{ label: '-e', name: '--allow-empty', description: 'Allow empty commit' },
+		{ label: '-v', name: '--verbose', description: 'Show diff of changes to be commited' },
+		{ label: '-n', name: '--no-verify', description: 'Disable hooks' },
+		{ label: '-R', name: '--reset-author', description: 'Claim authorship and reset author date' },
+		// { label: '-A', name: '--author=', description: 'Override the author', input: true },
+		{ label: '-s', name: '--signoff', description: 'Add Signed-off-by line' },
+		{ label: '-S', name: '--gpg-sign', description: 'GPG-sign commit' },
+		// { label: '-C', name: '--reuse-message=', description: 'Reuse commit message', input: true },
 	];
 
 	return MenuUtil.showMenu(commitMenu, { repository, switches });
@@ -46,7 +46,7 @@ export async function magitCommit(repository: MagitRepository) {
 
 export async function commit({ repository, switches }: MenuState, commitArgs: string[] = []) {
 
-	let stageAllSwitch = switches?.find(({ key }) => key === '-a');
+	let stageAllSwitch = switches?.find(({ label }) => label === '-a');
 
 	if (repository.indexChanges.length === 0 && !stageAllSwitch?.activated && stageAllSwitch) {
 		if (await MagitUtils.confirmAction('Nothing staged. Stage and commit all unstaged changes?')) {

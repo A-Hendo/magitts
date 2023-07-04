@@ -196,9 +196,6 @@ export class MenuUtil {
 
 
     return MenuUtil.showSwitchLikeMenu<Switch[]>(items, menuState,
-      async (item) => {
-        return { ...item, picked: !item.picked, action: item?.action };
-      },
       getUpdatedSwitches,
       'Switches (press letter for switches you want to enable)',
       true,
@@ -220,9 +217,6 @@ export class MenuUtil {
     });
 
     return MenuUtil.showSwitchLikeMenu<Option[]>(items, menuState,
-      async (item) => {
-        return { ...item, picked: !item.picked };
-      },
       getUpdatedOptions,
       'Options (press the letter of the option you want to set)',
       true,
@@ -244,9 +238,6 @@ export class MenuUtil {
     });
 
     return MenuUtil.showSwitchLikeMenu<Tag[]>(items, menuState,
-      async (item) => {
-        return { ...item, picked: !item.picked };
-      },
       getUpdatedTags,
       'Tags (press letter for tags you want to enable)',
       true,
@@ -264,7 +255,6 @@ export class MenuUtil {
   private static showSwitchLikeMenu<T>(
     items: Switch[],
     menuState: MenuState,
-    processItemSelection: (q: Switch) => Promise<Switch>,
     getUpdatedState: (q: QuickPick<Switch>, m: MenuState) => T,
     title = '',
     canSelectMany = false,
@@ -283,59 +273,51 @@ export class MenuUtil {
         _quickPick.selectedItems = _quickPick.items.filter(s => s.picked);
       }
 
-      const eventListenerDisposable = _quickPick.onDidChangeValue(async (e) => {
+      const eventListenerDisposable = _quickPick.onDidChangeValue(async () => {
         if (_quickPick.value === 'q') {
           return _quickPick.hide();
         }
-        if (ignoreKey && _quickPick.value === ignoreKey) {
-          return;
-        }
-        let quickPickValue = _quickPick.value;
-        _quickPick.value = '';
 
-        shouldDispose = false;
-
-        // const chosenItems = _quickPick.activeItems[0] as Switch;
-        // try {
-        //   chosenItems.action !== undefined ? await chosenItems?.action(menuState) : undefined;
-        // } catch (error) {
-        //   reject(error);
-        // }
-
-        let updated: Switch[] = [];
-
-        for (let item of _quickPick.items) {
-          if (MenuUtil.matchesSwitchOrOption(quickPickValue, item.label)) {
-            updated.push(await processItemSelection(item));
-            if (magitConfig.quickSwitchEnabled) {
-              _quickPick.hide();
+        _quickPick.items.filter(i => MenuUtil.matchesSwitchOrOption(_quickPick.value, i.label))
+          .map(async i => {
+            i.picked = !i.picked;
+            _quickPick.value = '';
+            resolveOnHide = false;
+            _quickPick.hide();
+            try {
+              i.action !== undefined && i.picked ? await i.action(menuState) : undefined;
+            } catch (error) {
+              reject(error);
             }
-          } else {
-            updated.push({ ...item });
-          }
-        }
-
-        _quickPick.items = updated;
-        if (canSelectMany) {
-          _quickPick.selectedItems = _quickPick.items.filter(s => s.picked);
-        }
-
-        shouldDispose = true;
-        _quickPick.show();
+            if (canSelectMany) {
+              _quickPick.selectedItems = _quickPick.items.filter(s => s.picked);
+            }
+            resolve(getUpdatedState(_quickPick, menuState));
+          });
       });
 
       const acceptListenerDisposable = _quickPick.onDidAccept(async () => {
         resolveOnHide = false;
         _quickPick.hide();
+        // User input is accepted but doesn't enable
+        const chosenItem = _quickPick.activeItems[0];
 
-        const chosenItems = _quickPick.activeItems[0] as Switch;
-        try {
-          chosenItems?.action !== undefined ? await chosenItems?.action(menuState) : undefined;
-        } catch (error) {
-          reject(error);
-        }
-
-        resolve(getUpdatedState(_quickPick, menuState));
+        _quickPick.items.filter(i => i.label === chosenItem.label)
+          .map(async i => {
+            i.picked = !i.picked;
+            _quickPick.value = '';
+            resolveOnHide = false;
+            _quickPick.hide();
+            try {
+              i.action !== undefined && i.picked ? await i.action(menuState) : undefined;
+            } catch (error) {
+              reject(error);
+            }
+            if (canSelectMany) {
+              _quickPick.selectedItems = _quickPick.items.filter(s => s.picked);
+            }
+            resolve(getUpdatedState(_quickPick, menuState));
+          });
       });
 
       const didHideDisposable = _quickPick.onDidHide(() => {

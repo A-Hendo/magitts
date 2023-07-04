@@ -32,7 +32,7 @@ const switches: Switch[] = [
 	// { label: '-f', name: '--follow', description: 'Follow renames when showing single-file log', activated: false},
 	// { label: '--', name: '--', description: 'Limit to files', activated: false},
 	// { label: '-o', name: '--[topo|author-date|date]-order', description: 'Order commits by', activated: false },
-	{ label: '-A', name: '--author=', description: 'Limit to author', activated: false, action: async (menuState: MenuState) => await GetInput("-A", menuState) },
+	{ label: '-A', name: '--author=', description: 'Limit to author', activated: false, action: async (menuState: MenuState) => await GetSwitchInput("-A", "--author=", menuState) },
 	// { label: '-F', name: '--grep', description: 'Search messages', activated: false },
 	// { label: '-i', name: '--regexp-ignore-case', description: 'Search case-insensitive', activated: false },
 	// { label: '-I', name: '--invert-grep', description: 'Invert search pattern', activated: false },
@@ -59,10 +59,11 @@ const tags: Tag[] = [
 	// { label: '/a', name: '--ancestry-path', description: 'Only commits existing directly on ancestry path', activated: false },
 ];
 
-async function GetInput(label: string, { switches }: MenuState) {
-	const input = await window.showInputBox({ prompt: `USER INPUT` });
-	switches?.filter(s => s.label === label).map(s => s.value = input);
-	return;
+async function GetSwitchInput(label: string, placeHolder: string, { switches }: MenuState) {
+	const input = await window.showInputBox({ placeHolder: placeHolder });
+	switches?.filter(s => s?.label === label).map(s => {
+		s.value = input;
+	});
 }
 
 export async function logging(repository: MagitRepository) {
@@ -163,7 +164,7 @@ function createLogArgs(switches: Switch[], options: Option[], tags: Tag[]) {
 	if (switchMap['-r'].activated) {
 		switches?.filter(s => s.label === '-g' ? s.activated = false : undefined);
 	}
-	switches?.filter(s => s.activated && s.label !== '-d').map(s => args.push(s.name))
+	switches?.filter(s => s.activated && s.label !== '-d').map(s => s.value ? args.push(`${s.name}"${s?.value}"`) : args.push(s.name))
 
 	return args;
 }

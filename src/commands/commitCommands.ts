@@ -6,6 +6,7 @@ import * as Constants from '../common/constants';
 import { magitConfig } from '../extension';
 import { MenuState, MenuUtil } from '../menu/menu';
 import { MagitRepository } from '../models/magitRepository';
+import CommandUtils from '../utils/commandUtils';
 import FilePathUtils from '../utils/filePathUtils';
 import { gitRun } from '../utils/gitRawRunner';
 import GitTextUtils from '../utils/gitTextUtils';
@@ -35,10 +36,10 @@ export async function magitCommit(repository: MagitRepository) {
 		{ label: '-v', name: '--verbose', description: 'Show diff of changes to be commited' },
 		{ label: '-n', name: '--no-verify', description: 'Disable hooks' },
 		{ label: '-R', name: '--reset-author', description: 'Claim authorship and reset author date' },
-		// { label: '-A', name: '--author=', description: 'Override the author', input: true },
+		{ label: '-A', name: '--author=', description: 'Override the author', action: async (menuState: MenuState) => await CommandUtils.GetSwitchInput("-A", "--author=", menuState) },
 		{ label: '-s', name: '--signoff', description: 'Add Signed-off-by line' },
-		{ label: '-S', name: '--gpg-sign', description: 'GPG-sign commit' },
-		// { label: '-C', name: '--reuse-message=', description: 'Reuse commit message', input: true },
+		{ label: '-S', name: '--gpg-sign=', description: 'GPG-sign commit', action: async (menuState: MenuState) => await CommandUtils.GetSwitchInput("-S", "--gpg-sign=", menuState) },
+		// { label: '-C', name: '--reuse-message=', description: 'Reuse commit message', action: async (menuState: MenuState) => await CommandUtils.GetSwitchInput("-A", "--author=", menuState) },
 	];
 
 	return MenuUtil.showMenu(commitMenu, { repository, switches });

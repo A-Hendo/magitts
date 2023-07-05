@@ -4,10 +4,12 @@ import { MenuState, MenuUtil, Option, Switch, Tag } from '../menu/menu';
 import { MagitBranch } from '../models/magitBranch';
 import { MagitLogEntry } from '../models/magitLogCommit';
 import { MagitRepository } from '../models/magitRepository';
+import CommandUtils from '../utils/commandUtils';
 import { LogLevel, gitRun } from '../utils/gitRawRunner';
 import MagitUtils from '../utils/magitUtils';
 import ViewUtils from '../utils/viewUtils';
 import LogView from '../views/logView';
+
 const loggingMenu = {
 	title: 'Logging',
 	commands: [
@@ -25,30 +27,29 @@ const switches: Switch[] = [
 	{ label: '-g', name: '--graph', description: 'Show graph', activated: true },
 	{ label: '-c', name: '--color', description: 'Show graph in color', activated: false },
 	{ label: '-d', name: '--decorate', description: 'Show refnames', activated: true },
-	// { label: '-h', name: '++header', description: 'Show header', activated: false },
+	{ label: '-h', name: '++header', description: 'Show header', activated: false },
 	{ label: '-p', name: '--patch', description: 'Show diffs', activated: false },
 	{ label: '-s', name: '--stat', description: 'Show diffstats', activated: false },
 	{ label: '-r', name: '--reverse', description: 'Reverse order', activated: false },
-	// { label: '-f', name: '--follow', description: 'Follow renames when showing single-file log', activated: false},
+	{ label: '-f', name: '--follow', description: 'Follow renames when showing single-file log', activated: false },
 	// { label: '--', name: '--', description: 'Limit to files', activated: false},
 	// { label: '-o', name: '--[topo|author-date|date]-order', description: 'Order commits by', activated: false },
-	{ label: '-A', name: '--author=', description: 'Limit to author', activated: false, action: async (menuState: MenuState) => await GetSwitchInput("-A", "--author=", menuState) },
-	// { label: '-F', name: '--grep', description: 'Search messages', activated: false },
-	// { label: '-i', name: '--regexp-ignore-case', description: 'Search case-insensitive', activated: false },
-	// { label: '-I', name: '--invert-grep', description: 'Invert search pattern', activated: false },
-	// { label: '-G', name: '-G', description: 'Search changes', activated: false },
-	// { label: '-S', name: '-S', description: 'Search occurrences', activated: false },
+	{ label: '-A', name: '--author=', description: 'Limit to author', activated: false, action: async (menuState: MenuState) => await CommandUtils.GetSwitchInput("-A", "--author=", menuState) },
+	{ label: '-F', name: '--grep=', description: 'Search messages', activated: false, action: async (menuState: MenuState) => await CommandUtils.GetSwitchInput("-F", "--grep=", menuState) },
+	{ label: '-i', name: '--regexp-ignore-case', description: 'Search case-insensitive', activated: false },
+	{ label: '-I', name: '--invert-grep=', description: 'Invert search pattern', activated: false, action: async (menuState: MenuState) => await CommandUtils.GetSwitchInput("-I", "--invert-grep", menuState) },
+	{ label: '-G', name: '-G', description: 'Search changes', activated: false, action: async (menuState: MenuState) => await CommandUtils.GetSwitchInput("-G", "-G", menuState) },
+	{ label: '-S', name: '-S', description: 'Search occurrences', activated: false, action: async (menuState: MenuState) => await CommandUtils.GetSwitchInput("-S", "-S", menuState) },
 	// { label: '-L', name: '-L', description: 'Trace line evolution', activated: false },
-
+	{ label: '-n', name: '-n', description: 'Limit number of commits', value: '256', activated: true, action: async (menuState: MenuState) => await CommandUtils.GetSwitchInput("-n", "-n", menuState) },
 ];
 
 const options: Option[] = [
-	{ label: '=n', name: '-n', description: 'Limit number of commits', value: '256', activated: true },
 	{ label: '=m', name: '--no-merges', description: 'Omit merges', activated: false },
 	{ label: '=S', name: '--show-signature', description: 'Show signatures', activated: false },
 	{ label: '=p', name: '--first-parent', description: 'First parent', activated: false },
-	// { label: '=s', name: '--since=', description: 'Limit to commits since', activated: false},
-	// { label: '=u', name: '--until=', description: 'Limit to commits until', activated: false },
+	{ label: '=s', name: '--since=', description: 'Limit to commits since', activated: false, action: async (menuState: MenuState) => await CommandUtils.GetSwitchInput("=s", "--since=", menuState) },
+	{ label: '=u', name: '--until=', description: 'Limit to commits until', activated: false, action: async (menuState: MenuState) => await CommandUtils.GetSwitchInput("=u", "--until=", menuState) },
 ];
 
 const tags: Tag[] = [
@@ -56,15 +57,8 @@ const tags: Tag[] = [
 	{ label: '/f', name: '--full-history', description: 'Do not prune history', activated: false },
 	{ label: '/s', name: '--sparse', description: 'Only commits changing given paths', activated: false },
 	{ label: '/d', name: '--dense', description: 'Only selected commits plus meaningful history', activated: false },
-	// { label: '/a', name: '--ancestry-path', description: 'Only commits existing directly on ancestry path', activated: false },
+	{ label: '/a', name: '--ancestry-path', description: 'Only commits existing directly on ancestry path', activated: false },
 ];
-
-async function GetSwitchInput(label: string, placeHolder: string, { switches }: MenuState) {
-	const input = await window.showInputBox({ placeHolder: placeHolder });
-	switches?.filter(s => s?.label === label).map(s => {
-		s.value = input;
-	});
-}
 
 export async function logging(repository: MagitRepository) {
 	return MenuUtil.showMenu(loggingMenu, { repository, switches, options, tags });

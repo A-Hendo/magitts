@@ -19,7 +19,8 @@ export async function tagging(repository: MagitRepository) {
 	const switches = [
 		{ label: '-a', name: '--annotate', description: 'Annotate' },
 		{ label: '-f', name: '--force', description: 'Force' },
-		// { label: '-s', name: '--sign', description: 'Sign' }
+		{ label: '-s', name: '--sign', description: 'Sign' }
+		{ label: '-u', name: '--local-user=', description: 'Sign as', action: async (menuState: MenuState) => await CommandUtils.GetSwitchInput("-A", "--author=", menuState) }
 	];
 
 	return MenuUtil.showMenu(taggingMenu, { repository, switches });

@@ -1,4 +1,4 @@
-import { MenuItem, MenuState, MenuUtil } from '../menu/menu';
+import { MenuItem, MenuState, MenuUtil, Option, Switch } from '../menu/menu';
 import { PickMenuUtil } from '../menu/pickMenu';
 import { MagitRepository } from '../models/magitRepository';
 import { gitRun } from '../utils/gitRawRunner';
@@ -21,8 +21,10 @@ function generatePullingMenu(repository: MagitRepository) {
 }
 
 export async function pulling(repository: MagitRepository): Promise<any> {
-	const switches = [
-		{ label: '-r', name: '--rebase', description: 'Rebase local commits' }
+	const switches: Switch[] = [
+		{ label: '-f', name: '--ff-only', description: 'Fast-forward only' },
+		{ label: '-r', name: '--rebase', description: 'Rebase local commits' },
+		{ label: '-a', name: '--autostash', description: 'Autostash' },
 	];
 
 	return MenuUtil.showMenu(generatePullingMenu(repository), { repository, switches });

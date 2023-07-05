@@ -1,11 +1,12 @@
 import { Uri, window } from 'vscode';
 import * as Constants from '../common/constants';
-import { MenuState, MenuUtil } from '../menu/menu';
+import { MenuState, MenuUtil, Option, Switch } from '../menu/menu';
 import { PickMenuItem, PickMenuUtil } from '../menu/pickMenu';
 import { MagitChange } from '../models/magitChange';
 import { MagitRepository } from '../models/magitRepository';
 import { Stash } from '../models/stash';
 import { Status } from '../typings/git';
+import CommandUtils from '../utils/commandUtils';
 import { gitRun } from '../utils/gitRawRunner';
 import MagitUtils from '../utils/magitUtils';
 import ViewUtils from '../utils/viewUtils';
@@ -30,15 +31,30 @@ const diffingMenu = {
 
 export async function diffing(repository: MagitRepository) {
 
-	// const switches = [
-	// { label: '-f', name: '--function-context', description: 'Show surrounding functions' },
-	// { label: '-b', name: '--ignore-space-change', description: 'Ignore whitespace changes' },
-	// { label: '-w', name: '--ignore-all-space', description: 'Ignore all whitespace' },
-	// { label: '-x', name: '--no-ext-diff', description: 'Disallow external diff drivers', activated: true },
-	// { label: '-s', name: '--stat', description: 'Show stats', activated: true },
-	// ];
+	const switches: Switch[] = [
+		{ label: '--', name: '--', description: 'Limit to files' },
+		{ label: '-f', name: '--ignore-submodules=', description: 'Ignore submodules', action: async (menuState: MenuState) => await CommandUtils.GetSwitchInput("-A", "--author=", menuState) },
+		{ label: '-b', name: '--ignore-space-change', description: 'Ignore whitespace changes' },
+		{ label: '-w', name: '--ignore-all-space', description: 'Ignore all whitespace' },
+		{ label: '-d', name: '--irreversible-delete', description: 'Omit preimage for deletes' },
+		{ label: '-U', name: '--U', description: 'Context lines' },
+		{ label: '-W', name: '--function-context', description: 'Show surrounding functions' },
 
-	return MenuUtil.showMenu(diffingMenu, { repository });
+		// { label: '-A', name: '--diff-algorithm=', description: 'Diff algorithm' },
+		{ label: '-M', name: '-M', description: 'Detect renames' },
+		{ label: '-C', name: '-C', description: 'Detect copies' },
+		{ label: '-x', name: '--no-ext-diff', description: 'Disallow external diff drivers', activated: true },
+		{ label: '-s', name: '--stat', description: 'Show stats', activated: true },
+		{ label: '-R', name: '-R', description: 'Reverse sides' },
+		// { label: '-m', name: '--color-moved=', description: 'Color moved lines' },
+	];
+
+	const options: Switch[] = [
+		{ label: '=g', name: '--show-signature', description: 'Show signature' },
+		// { label: '=w', name: '--color-moved-ws=', description: 'Whitespace treatment for --color-moved' },
+	];
+
+	return MenuUtil.showMenu(diffingMenu, { repository, switches, options });
 }
 
 async function diffRange({ repository }: MenuState) {

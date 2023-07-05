@@ -1,6 +1,7 @@
 import * as Commit from '../commands/commitCommands';
 import { MenuState, MenuUtil, Switch } from '../menu/menu';
 import { MagitRepository } from '../models/magitRepository';
+import CommandUtils from '../utils/commandUtils';
 import { gitRun } from '../utils/gitRawRunner';
 import MagitUtils from '../utils/magitUtils';
 
@@ -29,6 +30,12 @@ export async function merging(repository: MagitRepository) {
 	const switches = [
 		{ label: '-f', name: '--ff-only', description: 'Fast-forward only' },
 		{ label: '-n', name: '--no-ff', description: 'No fast-forward' },
+		// { label: '-s', name: '--strategy=', description: 'Strategy' },
+		// { label: '-X', name: '--strategy-option=', description: 'Strategy Option' },
+		{ label: '-b', name: '-Xignore-space-change', description: 'Ignore changes in amount of whitespace' },
+		{ label: '-w', name: '-Xignore-all-space', description: 'Ignore whitespace when comparing lines' },
+		{ label: '-A', name: '-Xdiff-algorithm', description: 'Diff algorithm' },
+		{ label: '-S', name: '--gpg-sign=', description: 'Sign using gpg', action: async (menuState: MenuState) => await CommandUtils.GetSwitchInput("-S", "--gpg-sign=", menuState) },
 	];
 
 	if (repository.mergingState) {

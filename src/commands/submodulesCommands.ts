@@ -30,7 +30,7 @@ export async function submodules(repository: MagitRepository) {
 		{ label: '-C', name: '--checkout', description: 'Checkout tip' },
 		{ label: '-R', name: '--rebase', description: 'Rebase onto tip' },
 		{ label: '-M', name: '--merge', description: 'Merge tip' },
-		{ label: '-U', name: '--remote', description: 'Use upstream tip' }
+		{ label: '-U', name: '--remote', description: 'Use upstream tip' },
 	];
 
 	return MenuUtil.showMenu(submodulesMenu, { repository, switches });

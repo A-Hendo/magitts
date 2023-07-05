@@ -29,7 +29,8 @@ export async function fetching(repository: MagitRepository): Promise<any> {
 	}
 
 	const switches: Switch[] = [
-		{ label: '-p', name: '--prune', description: 'Prune deleted branches' }
+		{ label: '-p', name: '--prune', description: 'Prune deleted branches' },
+		{ label: '-t', name: '--tags', description: 'Fetch all tags' },
 	];
 
 	return MenuUtil.showMenu({ title: 'Fetching', commands: fetchingMenuItems }, { repository, switches });

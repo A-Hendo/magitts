@@ -2,6 +2,7 @@ import { window } from 'vscode';
 import * as Commit from '../commands/commitCommands';
 import { MenuState, MenuUtil } from '../menu/menu';
 import { MagitRepository } from '../models/magitRepository';
+import CommandUtils from '../utils/commandUtils';
 import { gitRun } from '../utils/gitRawRunner';
 import MagitUtils from '../utils/magitUtils';
 
@@ -19,8 +20,8 @@ export async function tagging(repository: MagitRepository) {
 	const switches = [
 		{ label: '-a', name: '--annotate', description: 'Annotate' },
 		{ label: '-f', name: '--force', description: 'Force' },
-		{ label: '-s', name: '--sign', description: 'Sign' }
-		{ label: '-u', name: '--local-user=', description: 'Sign as', action: async (menuState: MenuState) => await CommandUtils.GetSwitchInput("-A", "--author=", menuState) }
+		{ label: '-s', name: '--sign', description: 'Sign' },
+		{ label: '-u', name: '--local-user=', description: 'Sign as', action: async (menuState: MenuState) => await CommandUtils.GetSwitchInput('-A', '--author=', menuState) },
 	];
 
 	return MenuUtil.showMenu(taggingMenu, { repository, switches });

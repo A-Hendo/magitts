@@ -33,23 +33,23 @@ const switches: Switch[] = [
 	{ label: '-r', name: '--reverse', description: 'Reverse order', activated: false },
 	{ label: '-f', name: '--follow', description: 'Follow renames when showing single-file log', activated: false },
 	// { label: '--', name: '--', description: 'Limit to files', activated: false},
-	// { label: '-o', name: '--[topo|author-date|date]-order', description: 'Order commits by', activated: false },
-	{ label: '-A', name: '--author=', description: 'Limit to author', activated: false, action: async (menuState: MenuState) => await CommandUtils.GetSwitchInput("-A", "--author=", menuState) },
-	{ label: '-F', name: '--grep=', description: 'Search messages', activated: false, action: async (menuState: MenuState) => await CommandUtils.GetSwitchInput("-F", "--grep=", menuState) },
+	{ label: '-o', name: '--[topo|author-date|date]-order', description: 'Order commits by', activated: false, action: async (menuState: MenuState) => await CommandUtils.GetInputOptions('-o', '--[topo|author-date|date]-order', ['topo', 'author-date', 'date'], menuState) },
+	{ label: '-A', name: '--author=', description: 'Limit to author', activated: false, action: async (menuState: MenuState) => await CommandUtils.GetSwitchInput('-A', '--author=', menuState) },
+	{ label: '-F', name: '--grep=', description: 'Search messages', activated: false, action: async (menuState: MenuState) => await CommandUtils.GetSwitchInput('-F', '--grep=', menuState) },
 	{ label: '-i', name: '--regexp-ignore-case', description: 'Search case-insensitive', activated: false },
-	{ label: '-I', name: '--invert-grep=', description: 'Invert search pattern', activated: false, action: async (menuState: MenuState) => await CommandUtils.GetSwitchInput("-I", "--invert-grep", menuState) },
-	{ label: '-G', name: '-G', description: 'Search changes', activated: false, action: async (menuState: MenuState) => await CommandUtils.GetSwitchInput("-G", "-G", menuState) },
-	{ label: '-S', name: '-S', description: 'Search occurrences', activated: false, action: async (menuState: MenuState) => await CommandUtils.GetSwitchInput("-S", "-S", menuState) },
+	{ label: '-I', name: '--invert-grep=', description: 'Invert s  earch pattern', activated: false, action: async (menuState: MenuState) => await CommandUtils.GetSwitchInput('-I', '--invert-grep', menuState) },
+	{ label: '-G', name: '-G', description: 'Search changes', activated: false, action: async (menuState: MenuState) => await CommandUtils.GetSwitchInput('-G', '-G', menuState) },
+	{ label: '-S', name: '-S', description: 'Search occurrences', activated: false, action: async (menuState: MenuState) => await CommandUtils.GetSwitchInput('-S', '-S', menuState) },
 	// { label: '-L', name: '-L', description: 'Trace line evolution', activated: false },
-	{ label: '-n', name: '-n', description: 'Limit number of commits', value: '256', activated: true, action: async (menuState: MenuState) => await CommandUtils.GetSwitchInput("-n", "-n", menuState) },
+	{ label: '-n', name: '-n', description: 'Limit number of commits', value: '256', activated: true, action: async (menuState: MenuState) => await CommandUtils.GetSwitchInput('-n', '-n', menuState) },
 ];
 
 const options: Option[] = [
 	{ label: '=m', name: '--no-merges', description: 'Omit merges', activated: false },
 	{ label: '=S', name: '--show-signature', description: 'Show signatures', activated: false },
 	{ label: '=p', name: '--first-parent', description: 'First parent', activated: false },
-	{ label: '=s', name: '--since=', description: 'Limit to commits since', activated: false, action: async (menuState: MenuState) => await CommandUtils.GetSwitchInput("=s", "--since=", menuState) },
-	{ label: '=u', name: '--until=', description: 'Limit to commits until', activated: false, action: async (menuState: MenuState) => await CommandUtils.GetSwitchInput("=u", "--until=", menuState) },
+	{ label: '=s', name: '--since=', description: 'Limit to commits since', activated: false, action: async (menuState: MenuState) => await CommandUtils.GetSwitchInput('=s', '--since=', menuState) },
+	{ label: '=u', name: '--until=', description: 'Limit to commits until', activated: false, action: async (menuState: MenuState) => await CommandUtils.GetSwitchInput('=u', '--until=', menuState) },
 ];
 
 const tags: Tag[] = [
@@ -158,7 +158,20 @@ function createLogArgs(switches: Switch[], options: Option[], tags: Tag[]) {
 	if (switchMap['-r'].activated) {
 		switches?.filter(s => s.label === '-g' ? s.activated = false : undefined);
 	}
-	switches?.filter(s => s.activated && s.label !== '-d').map(s => s.value ? args.push(`${s.name}"${s?.value}"`) : args.push(s.name))
+	switches?.filter(s => s.activated && s.label !== '-d').map(s => {
+		let sarg = s.name;
+		if (s.value) {
+			if (s.label === '-o') {
+				sarg = `--${s.value}-order`;
+			} else if (s.label === '-n') {
+				sarg = `${s.name}${s?.value}`;
+			}
+			else {
+				sarg = `${s.name}"${s?.value}"`;
+			}
+		}
+		args.push(sarg);
+	});
 
 	return args;
 }

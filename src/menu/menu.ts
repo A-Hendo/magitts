@@ -44,11 +44,17 @@ export class MenuUtil {
 
       menuState.switches.filter(t => t.activated).map(t => {
         if (t.value !== undefined) {
-          activeSwitches += `${t.name}"${t.value}" `;
+          if (t.label === '-o') {
+            activeSwitches += `--${t.value}-order `;
+          } else if (t.label === '-n') {
+            activeSwitches += `${t.name}${t.value} `;
+          } else {
+            activeSwitches += `${t.name}"${t.value}" `;
+          }
         } else {
           activeSwitches += `${t.name} `;
         }
-      })
+      });
       const activeSwitchesPresentation = `[ ${activeSwitches} ]`;
 
       menuItems.push({
@@ -71,7 +77,7 @@ export class MenuUtil {
         } else {
           activeOptions += `${t.name} `;
         }
-      })
+      });
       const activeOptionsPresentation = `[ ${activeOptions} ]`;
 
       menuItems.push({
@@ -93,7 +99,7 @@ export class MenuUtil {
         } else {
           activeTags += `${t.name} `;
         }
-      })
+      });
 
       const activeTagsPresentation = `[ ${activeTags} ]`;
 

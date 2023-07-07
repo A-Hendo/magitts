@@ -1,5 +1,4 @@
 import { QuickPick, QuickPickItem, window } from 'vscode';
-import { magitConfig } from '../extension';
 import { MagitRepository } from '../models/magitRepository';
 
 export interface Menu {

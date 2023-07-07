@@ -20,7 +20,7 @@ export default class ViewUtils {
 		return viewFactory();
 	}
 
-	public static async showView(uri: Uri, view: DocumentView, textDocumentShowOptions: TextDocumentShowOptions = { preview: false, preserveFocus: false }) {
+	public static async showView(uri: Uri, view: DocumentView, textDocumentShowOptions: TextDocumentShowOptions = { preview: magitConfig.gitReplaceView, preserveFocus: false }) {
 		views.set(uri.toString(), view);
 		let doc = await workspace.openTextDocument(uri);
 		return window.showTextDocument(doc, { viewColumn: ViewUtils.showDocumentColumn(), ...textDocumentShowOptions });

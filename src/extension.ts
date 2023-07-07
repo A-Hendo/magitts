@@ -48,7 +48,7 @@ export const processLog: MagitProcessLogEntry[] = [];
 
 export let gitApi: API;
 export let logPath: string;
-export let magitConfig: { displayBufferSameColumn?: boolean, forgeEnabled?: boolean, hiddenStatusSections: Set<string>, quickSwitchEnabled?: boolean, gitPath?: string, gitRebaseAutostash?: boolean };
+export let magitConfig: { displayBufferSameColumn?: boolean, forgeEnabled?: boolean, hiddenStatusSections: Set<string>, quickSwitchEnabled?: boolean, gitPath?: string, gitRebaseAutostash?: boolean, gitReplaceView?: boolean };
 
 function loadConfig() {
 	let workspaceConfig = workspace.getConfiguration('magit');
@@ -59,7 +59,8 @@ function loadConfig() {
 		hiddenStatusSections: readHiddenStatusSections(workspaceConfig.get('hide-status-sections')),
 		quickSwitchEnabled: workspaceConfig.get('quick-switch-enabled'),
 		gitPath: workspaceConfig.get('git-path'),
-		gitRebaseAutostash: workspaceConfig.get('git-rebase-autostash'),
+		gitRebaseAutostash: workspaceConfig.get('git-rebase-autostash') ?? true,
+		gitReplaceView: workspaceConfig.get('git-replace-view') ?? true,
 	};
 
 	let configCodePath: string | undefined = workspaceConfig.get('code-path');

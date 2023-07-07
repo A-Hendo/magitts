@@ -1,17 +1,17 @@
 {
 	"name": "magit",
 	"preview": true,
-	"displayName": "edamagit",
+	"displayName": "magitts",
 	"description": "Magit for Visual Studio Code",
-	"publisher": "kahole",
+	"publisher": "a-hendo",
 	"author": {
-		"name": "Kristian Andersen Hole"
+		"name": "Adam Henderson",
 	},
 	"version": "0.6.42",
 	"engines": {
 		"vscode": "^1.50.0"
 	},
-	"icon": "images/edamagit_logo.png",
+	"icon": "images/magitts-logo.png",
 	"categories": [
 		"Other"
 	],
@@ -22,13 +22,13 @@
 		"commit"
 	],
 	"license": "MIT",
-	"homepage": "https://github.com/kahole/edamagit/blob/master/README.md",
+	"homepage": "https://github.com/A-Hendo/magitts/blob/master/README.md",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/kahole/edamagit.git"
+		"url": "https://github.com/a-hendo/magitts.git"
 	},
 	"bugs": {
-		"url": "https://github.com/kahole/edamagit/issues"
+		"url": "https://github.com/A-Hendo/magitts/issues"
 	},
 	"capabilities": {
 		"untrustedWorkspaces": {
@@ -390,7 +390,7 @@
 			}
 		},
 		"configuration": {
-			"title": "Edamagit",
+			"title": "Magitts",
 			"properties": {
 				"magit.display-buffer-function": {
 					"type": "string",
@@ -399,8 +399,8 @@
 						"same-column"
 					],
 					"enumDescriptions": [
-						"Open Edamagit views to the side of the current editor group.",
-						"Open Edamagit views in the current editor group."
+						"Open Magitts views to the side of the current editor group.",
+						"Open Magitts views in the current editor group."
 					],
 					"default": "other-column",
 					"description": "Choose where new buffers will be displayed."

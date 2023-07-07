@@ -184,7 +184,7 @@ async function queryGithub(accessToken: string, ql: object) {
 	let res = await request
 		.post('https://api.github.com/graphql')
 		.set('Authorization', `Bearer ${accessToken}`)
-		.set('User-Agent', 'edamagit')
+		.set('User-Agent', 'magitts')
 		.send(JSON.stringify(ql));
 
 	return JSON.parse(res.data);

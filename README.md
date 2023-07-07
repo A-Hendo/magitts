@@ -1,25 +1,24 @@
 <h1 align="center">
   <br>
-  <a href="https://marketplace.visualstudio.com/items?itemName=kahole.magit">
-    <img src="https://github.com/kahole/edamagit/raw/develop/images/edamagit_logo.png" alt="edamagit" width="120" />
+  <a href="">
+    <img src="https://github.com/a-hendo/magitts/raw/develop/images/magitts-logo.png" alt="magitts" width="120" />
   </a>
   <br>
-  edamagit
+  magitts
   <br>
 </h1>
 
-<h3 align="center">Magit for VSCode, inspired by the awesome original <a href="https://magit.vc/" target="_blank">Magit</a>.</h3>
+<h3 align="center">Magit for VSCode, inspired by the original <a href="https://magit.vc/" target="_blank">Magit</a>.</h3>
+<p align="center">Magitts (magit + TypeScript) is forked from <a href="https://github.com/kahole/edamagit">edamagit</a></p>
 
 <p align="center">
-  <a href="https://marketplace.visualstudio.com/items?itemName=kahole.magit">
+  <!-- <a href="https://marketplace.visualstudio.com/items?itemName=kahole.magit">
       <img src="https://img.shields.io/visual-studio-marketplace/v/kahole.magit?color=green&label=VS%20Marketplace" />
   </a>
   <a href="https://open-vsx.org/extension/kahole/magit">
     <img src="https://img.shields.io/open-vsx/v/kahole/magit?color=blue" />
-  </a>
-  <a href="https://www.buymeacoffee.com/kahole" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-orange.png" height="28">
-  </a>
-  <a href="https://github.com/sponsors/kahole" target="_blank"><img src="https://img.shields.io/static/v1?label=Sponsor&message=%E2%9D%A4&logo=GitHub&color=pink"></a>
+  </a> -->
+  <a href="https://github.com/sponsors/a-hendo" target="_blank"><img src="https://img.shields.io/static/v1?label=Sponsor&message=%E2%9D%A4&logo=GitHub&color=blue"></a>
 </p>
 
 <h3 align="center">
@@ -170,16 +169,17 @@ remove the default edamagit bindings and the collisions with the Vim extension.
 </details>
 
 ## Roadmap
-
-_Feature requests as well as issues are welcome_
+_The goal is to become a true version of magit_
 
 ### Interface
   - More interactivity in second-tier views (commit view, stash view, etc)
   - Config menus
 
 ### Missing Git/Magit features
+  - More logging features
   - More diffing features
-  - More logging features (https://github.com/kahole/edamagit/pull/40)
+  - More rebasing features (subset, etc)
+  - User input for args that accept it
   - Bisecting
   - Patches
   - Subtrees

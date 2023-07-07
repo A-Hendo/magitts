@@ -1,10 +1,10 @@
-## Introduction to edamagit
+## Introduction to magitts
 
-[edamagit](https://marketplace.visualstudio.com/items?itemName=kahole.magit) is a keyboard-driven git interface for VSCode. It's made in the style of the emacs extension [magit](https://magit.vc/).
+[magitts](https://marketplace.visualstudio.com/items?itemName=kahole.magit) is a keyboard-driven git interface for VSCode. It's made in the style of the emacs extension [magit](https://magit.vc/).
 
 Git commands are mapped to keypresses for efficient use. E.g. pressing `b c` will allow you to checkout a new branch.
 
-Install it in VSCode by searching for `edamagit` in the extension manager.
+Install it in VSCode by searching for `magitts` in the extension manager.
 
 Or get it here on one of these marketplaces
 - [VSCode Marketplace](https://marketplace.visualstudio.com/items?itemName=kahole.magit)
@@ -48,7 +48,7 @@ pressing `s` will stage the file:
 
 From the status view press `?` to bring up the help view.
 
-This shows you the available edamagit menus and which key to press to invoke them.
+This shows you the available magitts menus and which key to press to invoke them.
 For example, pressing `b` brings up the `Branching`-menu.
 
 ![](https://hole.dev/images/edamagit_introduction/help_view.jpg)
@@ -88,7 +88,7 @@ Or manually save and close the commit-message editor, this has the same effect.
 Some git commands are frequently used with switches or flags to enable some behaviors.
 E.g. `push --force`
 
-Many of the edamagit command menus have a switches menu which can be activated by pressing `-`.
+Many of the magitts command menus have a switches menu which can be activated by pressing `-`.
 
 ![](https://hole.dev/images/edamagit_introduction/switches_1.jpg)
 
@@ -108,7 +108,7 @@ Now you'll see the active switches listed in the 'Switches' menu entry.
 - Using the vscode command palette and typing `Magit ` will show you all available magit actions from where you currently are.
 - Pressing `$` brings up the git process log where you can see the git commands that have been run, and their output/errors/etc.
 - Enable Forge features in settings `Magit: Forge Enabled` to interact with Issues and PRs from github.
-- Be aware that edamagit sometimes uses the vscode bottom status bar to hint at possible actions or display messages. (e.g. when committing it shows the keyboard shortcuts)
+- Be aware that magitts sometimes uses the vscode bottom status bar to hint at possible actions or display messages. (e.g. when committing it shows the keyboard shortcuts)
 
 ### Learn more
 - [Youtube Tutorial - Jack Franklin](https://www.youtube.com/watch?v=kDISNtPYhjk)

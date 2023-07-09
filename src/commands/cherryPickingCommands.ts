@@ -1,6 +1,7 @@
 import * as CommitCommands from '../commands/commitCommands';
 import { MenuState, MenuUtil } from '../menu/menu';
 import { MagitRepository } from '../models/magitRepository';
+import CommandUtils from '../utils/commandUtils';
 import { gitRun } from '../utils/gitRawRunner';
 import MagitUtils from '../utils/magitUtils';
 
@@ -33,9 +34,16 @@ export async function cherryPicking(repository: MagitRepository) {
 		const switches = [
 			{ label: '-e', name: '--edit', description: 'Edit commit messages' },
 			{ label: '-x', name: '-x', description: 'Reference cherry in commit message' },
-		];
+			{ label: '-F', name: '--ff', description: 'Attempt fast-forward', activated: true, },
+			{ label: '-s', name: '--signoff', description: 'Add Signed-off-by lines' },
+			{ label: '-S', name: '--gpg-sign=', description: 'Sign using gpg', action: async (menuState: MenuState) => await CommandUtils.GetSwitchInput('-S', '--gpg-sign=', menuState) },
 
-		return MenuUtil.showMenu(cherryPickingMenu, { repository, switches });
+		];
+		const options = [
+			{ label: '=s', name: '--strategy=', description: 'Strategy', action: async (menuState: MenuState) => await CommandUtils.GetInputOptions('=s', '--strategy=', ['subtree', 'ours', 'octopus', 'resolve', 'recursive'], menuState) },
+		]
+
+		return MenuUtil.showMenu(cherryPickingMenu, { repository, switches, options });
 	}
 }
 

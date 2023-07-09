@@ -1,5 +1,13 @@
-import { sep } from 'path';
+import * as fs from 'fs';
+import * as path from 'path';
 import { Uri } from 'vscode';
+
+
+const results: string[] = [];
+let fileCount: number = 0;
+let rootDir: string = "";
+let ignore: string[] = ['.git', '.github'];
+
 
 export default class FilePathUtils {
 
@@ -13,8 +21,8 @@ export default class FilePathUtils {
 			return true;
 		}
 
-		if (parent.charAt(parent.length - 1) !== sep) {
-			parent += sep;
+		if (parent.charAt(parent.length - 1) !== path.sep) {
+			parent += path.sep;
 		}
 
 		// Windows is case insensitive
@@ -47,5 +55,36 @@ export default class FilePathUtils {
 			return pieces[pieces.length - 1];
 		}
 		return '';
+	}
+
+	private static readIgnoreFile(file: string): void {
+		const lines = fs.readFileSync(file, 'utf8').split('\n');
+		for (const line of lines) {
+			if (line.trim() !== '') {
+				ignore.push(line.trim());
+			}
+		}
+	}
+
+	private static traverseFiles(dir: string): string[] {
+		const files = fs.readdirSync(dir);
+
+		if (rootDir === "") {
+			rootDir = dir;
+			this.readIgnoreFile(dir + "/.gitignore");
+		}
+
+		for (const file of files) {
+			const fileFullPath = path.join(dir, file);
+			const stat = fs.statSync(fileFullPath);
+
+			if (stat.isDirectory() && !ignore.includes(file)) {
+				this.traverseFiles(fileFullPath);
+			} else if (file && !ignore.includes(file) && !results.includes(fileFullPath)) {
+				const path = fileFullPath.replace(rootDir, "");
+				results.push(path);
+			}
+		}
+		return results;
 	}
 }

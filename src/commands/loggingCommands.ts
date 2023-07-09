@@ -5,6 +5,7 @@ import { MagitBranch } from '../models/magitBranch';
 import { MagitLogEntry } from '../models/magitLogCommit';
 import { MagitRepository } from '../models/magitRepository';
 import CommandUtils from '../utils/commandUtils';
+import FilePathUtils from '../utils/filePathUtils';
 import { LogLevel, gitRun } from '../utils/gitRawRunner';
 import MagitUtils from '../utils/magitUtils';
 import ViewUtils from '../utils/viewUtils';
@@ -40,7 +41,7 @@ const switches: Switch[] = [
 	{ label: '-I', name: '--invert-grep=', description: 'Invert s  earch pattern', activated: false, action: async (menuState: MenuState) => await CommandUtils.GetSwitchInput('-I', '--invert-grep', menuState) },
 	{ label: '-G', name: '-G', description: 'Search changes', activated: false, action: async (menuState: MenuState) => await CommandUtils.GetSwitchInput('-G', '-G', menuState) },
 	{ label: '-S', name: '-S', description: 'Search occurrences', activated: false, action: async (menuState: MenuState) => await CommandUtils.GetSwitchInput('-S', '-S', menuState) },
-	// { label: '-L', name: '-L', description: 'Trace line evolution', activated: false },
+	// { label: '-L', name: '-L', description: 'Trace line evolution', activated: false, action: async (menuState: MenuState) => await CommandUtils.GetInputOptions('-L', '-L', FilePathUtils.traverseFiles(menuState.repository.uri.path), menuState) },
 	{ label: '-n', name: '-n', description: 'Limit number of commits', value: '256', activated: true, action: async (menuState: MenuState) => await CommandUtils.GetSwitchInput('-n', '-n', menuState) },
 ];
 

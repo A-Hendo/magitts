@@ -30,11 +30,11 @@ export async function merging(repository: MagitRepository) {
 	const switches = [
 		{ label: '-f', name: '--ff-only', description: 'Fast-forward only' },
 		{ label: '-n', name: '--no-ff', description: 'No fast-forward' },
-		{ label: '-s', name: '--strategy=', description: 'Strategy', action: async (menuState: MenuState) => await CommandUtils.GetInputOptions('=s', '--strategy=', ['subtree', 'ours', 'octopus', 'resolve', 'recursive'], menuState) },
-		{ label: '-X', name: '--strategy-option=', description: 'Strategy Option', action: async (menuState: MenuState) => await CommandUtils.GetInputOptions('=s', '--strategy=', ['ours', 'theirs', 'patience'], menuState) },
+		{ label: '-s', name: '--strategy=', description: 'Strategy', action: async (menuState: MenuState) => await CommandUtils.GetInputOptions('-s', '--strategy=', ['subtree', 'ours', 'octopus', 'resolve', 'recursive'], menuState) },
+		{ label: '-X', name: '--strategy-option=', description: 'Strategy Option', action: async (menuState: MenuState) => await CommandUtils.GetInputOptions('-X', '--strategy-option=', ['ours', 'theirs', 'patience'], menuState) },
 		{ label: '-b', name: '-Xignore-space-change', description: 'Ignore changes in amount of whitespace' },
 		{ label: '-w', name: '-Xignore-all-space', description: 'Ignore whitespace when comparing lines' },
-		{ label: '-A', name: '-Xdiff-algorithm', description: 'Diff algorithm' },
+		{ label: '-A', name: '-Xdiff-algorithm=', description: 'Diff algorithm', action: async (menuState: MenuState) => await CommandUtils.GetInputOptions('-A', '-Xdiff-algorithm=', ['default', 'm', 'patience'], menuState) },
 		{ label: '-S', name: '--gpg-sign=', description: 'Sign using gpg', action: async (menuState: MenuState) => await CommandUtils.GetSwitchInput('-S', '--gpg-sign=', menuState) },
 	];
 

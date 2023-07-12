@@ -28,17 +28,17 @@ const switches: Switch[] = [
 	{ label: '-g', name: '--graph', description: 'Show graph', activated: true },
 	{ label: '-c', name: '--color', description: 'Show graph in color', activated: false },
 	{ label: '-d', name: '--decorate', description: 'Show refnames', activated: true },
-	{ label: '-h', name: '++header', description: 'Show header', activated: false },
+	// { label: '-h', name: '++header', description: 'Show header', activated: false },
 	{ label: '-p', name: '--patch', description: 'Show diffs', activated: false },
 	{ label: '-s', name: '--stat', description: 'Show diffstats', activated: false },
 	{ label: '-r', name: '--reverse', description: 'Reverse order', activated: false },
 	{ label: '-f', name: '--follow', description: 'Follow renames when showing single-file log', activated: false },
-	// { label: '--', name: '--', description: 'Limit to files', activated: false},
+	// { label: '--', name: '--', description: 'Limit to files', activated: false, action: async (menuState: MenuState) => await CommandUtils.GetInputOptions('--', '--', FilePathUtils.traverseFiles(menuState.repository.uri.path), menuState) },
 	{ label: '-o', name: '--[topo|author-date|date]-order', description: 'Order commits by', activated: false, action: async (menuState: MenuState) => await CommandUtils.GetInputOptions('-o', '--[topo|author-date|date]-order', ['topo', 'author-date', 'date'], menuState) },
 	{ label: '-A', name: '--author=', description: 'Limit to author', activated: false, action: async (menuState: MenuState) => await CommandUtils.GetSwitchInput('-A', '--author=', menuState) },
 	{ label: '-F', name: '--grep=', description: 'Search messages', activated: false, action: async (menuState: MenuState) => await CommandUtils.GetSwitchInput('-F', '--grep=', menuState) },
 	{ label: '-i', name: '--regexp-ignore-case', description: 'Search case-insensitive', activated: false },
-	{ label: '-I', name: '--invert-grep=', description: 'Invert s  earch pattern', activated: false, action: async (menuState: MenuState) => await CommandUtils.GetSwitchInput('-I', '--invert-grep', menuState) },
+	{ label: '-I', name: '--invert-grep=', description: 'Inverts  each pattern', activated: false, action: async (menuState: MenuState) => await CommandUtils.GetSwitchInput('-I', '--invert-grep', menuState) },
 	{ label: '-G', name: '-G', description: 'Search changes', activated: false, action: async (menuState: MenuState) => await CommandUtils.GetSwitchInput('-G', '-G', menuState) },
 	{ label: '-S', name: '-S', description: 'Search occurrences', activated: false, action: async (menuState: MenuState) => await CommandUtils.GetSwitchInput('-S', '-S', menuState) },
 	// { label: '-L', name: '-L', description: 'Trace line evolution', activated: false, action: async (menuState: MenuState) => await CommandUtils.GetInputOptions('-L', '-L', FilePathUtils.traverseFiles(menuState.repository.uri.path), menuState) },
@@ -124,7 +124,7 @@ export async function logFile(repository: MagitRepository, fileUri: Uri) {
 }
 
 async function log(repository: MagitRepository, args: string[], revs: string[], paths: string[] = []) {
-	const output = await gitRun(repository.gitRepository, args.concat(revs, ['--'], paths), {}, LogLevel.Error);
+	const output = await gitRun(repository.gitRepository, args.concat(revs, paths), {}, LogLevel.Error);
 	const logEntries = parseLog(output.stdout);
 	const revName = revs.join(' ');
 	const uri = LogView.encodeLocation(repository);
@@ -166,8 +166,9 @@ function createLogArgs(switches: Switch[], options: Option[], tags: Tag[]) {
 				sarg = `--${s.value}-order`;
 			} else if (s.label === '-n') {
 				sarg = `${s.name}${s?.value}`;
-			}
-			else {
+			} else if (s.label === '--') {
+				sarg = `${s.name} ${s?.value}`;
+			} else {
 				sarg = `${s.name}"${s?.value}"`;
 			}
 		}

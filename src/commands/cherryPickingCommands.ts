@@ -41,7 +41,7 @@ export async function cherryPicking(repository: MagitRepository) {
 		];
 		const options = [
 			{ label: '=s', name: '--strategy=', description: 'Strategy', action: async (menuState: MenuState) => await CommandUtils.GetInputOptions('=s', '--strategy=', ['subtree', 'ours', 'octopus', 'resolve', 'recursive'], menuState) },
-		]
+		];
 
 		return MenuUtil.showMenu(cherryPickingMenu, { repository, switches, options });
 	}

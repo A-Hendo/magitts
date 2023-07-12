@@ -5,7 +5,7 @@ import { Uri } from 'vscode';
 
 const results: string[] = [];
 let fileCount: number = 0;
-let rootDir: string = "";
+let rootDir: string = '';
 let ignore: string[] = ['.git', '.github'];
 
 
@@ -66,12 +66,12 @@ export default class FilePathUtils {
 		}
 	}
 
-	private static traverseFiles(dir: string): string[] {
+	public static traverseFiles(dir: string): string[] {
 		const files = fs.readdirSync(dir);
 
-		if (rootDir === "") {
+		if (rootDir === '') {
 			rootDir = dir;
-			this.readIgnoreFile(dir + "/.gitignore");
+			this.readIgnoreFile(dir + '/.gitignore');
 		}
 
 		for (const file of files) {
@@ -81,7 +81,7 @@ export default class FilePathUtils {
 			if (stat.isDirectory() && !ignore.includes(file)) {
 				this.traverseFiles(fileFullPath);
 			} else if (file && !ignore.includes(file) && !results.includes(fileFullPath)) {
-				const path = fileFullPath.replace(rootDir, "");
+				const path = fileFullPath.replace(rootDir, '').slice(1);
 				results.push(path);
 			}
 		}

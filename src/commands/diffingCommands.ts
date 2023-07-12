@@ -33,7 +33,7 @@ export async function diffing(repository: MagitRepository) {
 
 	const switches: Switch[] = [
 		{ label: '--', name: '--', description: 'Limit to files' },
-		{ label: '-f', name: '--ignore-submodules=', description: 'Ignore submodules', action: async (menuState: MenuState) => await CommandUtils.GetSwitchInput('-A', '--author=', menuState) },
+		{ label: '-f', name: '--ignore-submodules=', description: 'Ignore submodules', action: async (menuState: MenuState) => await CommandUtils.GetSwitchInput('-f', '--ignore-submodules=', menuState) },
 		{ label: '-b', name: '--ignore-space-change', description: 'Ignore whitespace changes' },
 		{ label: '-w', name: '--ignore-all-space', description: 'Ignore all whitespace' },
 		{ label: '-d', name: '--irreversible-delete', description: 'Omit preimage for deletes' },

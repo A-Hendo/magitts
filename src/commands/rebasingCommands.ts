@@ -1,7 +1,9 @@
 import * as Commit from '../commands/commitCommands';
+import { magitConfig } from '../extension';
 import { MenuState, MenuUtil, Switch } from '../menu/menu';
 import { MagitError } from '../models/magitError';
 import { MagitRepository } from '../models/magitRepository';
+import CommandUtils from '../utils/commandUtils';
 import { gitRun } from '../utils/gitRawRunner';
 import MagitUtils from '../utils/magitUtils';
 
@@ -28,9 +30,10 @@ export async function rebasing(repository: MagitRepository) {
 			{ label: '-d', name: '--committer-date-is-author-date', description: 'Lie about committer date', activated: false },
 			{ label: '-t', name: '--ignore-date', description: 'Use current time as author date', activated: false },
 			{ label: '-a', name: '--autosquash', description: 'Autosquash', activated: false },
-			{ label: '-A', name: '--autostash', description: 'Autostash', activated: true },
+			{ label: '-A', name: '--autostash', description: 'Autostash', activated: magitConfig.gitRebaseAutostash },
 			{ label: '-i', name: '--interactive', description: 'Interactive', activated: false },
 			{ label: '-h', name: '--no-verify', description: 'Disable hooks', activated: false },
+			{ label: '-S', name: '--gpg-sign=', description: 'GPG-sign commit', action: async (menuState: MenuState) => await CommandUtils.GetSwitchInput('-S', '--gpg-sign=', menuState) },
 		];
 
 		const HEAD = repository.HEAD;

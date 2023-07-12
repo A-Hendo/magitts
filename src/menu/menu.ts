@@ -149,7 +149,7 @@ export class MenuUtil {
           resolveOnHide = false;
           _quickPick.hide();
           try {
-            chosenItems[0].action !== undefined ? await chosenItems[0].action(menuState) : undefined;
+            chosenItems[0]?.action !== undefined ? await chosenItems[0]?.action(menuState) : undefined;
             resolve();
           } catch (error) {
             reject(error);

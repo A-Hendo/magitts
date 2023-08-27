@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.0.1]
+- Autostash now enabled on rebase by default, can be disabled
+- Many command/args added
+- Key shortcuts reworked to be more consistent and similar with emacs magit
+- Reworked Switch/Option interface to extend MenuItem
+- Added Tag menu, extends switch
+- Added ability to accept user input for args
+- Added optional window updating to reuse windows, enabled by default
+
+## Previous Change Log (edamagit)
+
 ## [0.6.41]
 - Truncate large behind-upstream list to fix issue (#255) where the extension would grind to a halt. (@bjackman
 Brendan Jackman)

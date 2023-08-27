@@ -12,12 +12,6 @@
 <p align="center">Magitts (magit + TypeScript) is forked from <a href="https://github.com/kahole/edamagit">edamagit</a></p>
 
 <p align="center">
-  <!-- <a href="https://marketplace.visualstudio.com/items?itemName=kahole.magit">
-      <img src="https://img.shields.io/visual-studio-marketplace/v/kahole.magit?color=green&label=VS%20Marketplace" />
-  </a>
-  <a href="https://open-vsx.org/extension/kahole/magit">
-    <img src="https://img.shields.io/open-vsx/v/kahole/magit?color=blue" />
-  </a> -->
   <a href="https://github.com/sponsors/a-hendo" target="_blank"><img src="https://img.shields.io/static/v1?label=Sponsor&message=%E2%9D%A4&logo=GitHub&color=blue"></a>
 </p>
 

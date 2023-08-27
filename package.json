@@ -1,17 +1,17 @@
 {
-	"name": "magit",
+	"name": "magitts",
 	"preview": true,
-	"displayName": "magitts",
+	"displayName": "Magitts",
 	"description": "Magit for Visual Studio Code",
-	"publisher": "a-hendo",
+	"publisher": "hendo",
 	"author": {
-		"name": "Adam Henderson",
+		"name": "Adam Henderson"
 	},
-	"version": "0.6.42",
+	"version": "0.0.1",
 	"engines": {
 		"vscode": "^1.50.0"
 	},
-	"icon": "images/magitts-logo.png",
+	"icon": "",
 	"categories": [
 		"Other"
 	],

@@ -1,6 +1,6 @@
 # Changelog
 
-## [0.0.1]
+## [v1.0.0]
 - Autostash now enabled on rebase by default, can be disabled
 - Many command/args added
 - Key shortcuts reworked to be more consistent and similar with emacs magit
